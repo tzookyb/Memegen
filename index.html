@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+    <title>memegen</title>
+</head>
+
+<body onload="onInit()">
+    <div class="menu-screen" onclick="onCloseCurrentModal()"></div>
+    <div class="page-container">
+        <div class="about-modal">
+            <div class="about-image">f</div>
+            Hello
+        </div>
+        <!--Header-->
+        <header>
+            <div class="logo">
+                <img src="img/logo.png">
+            </div>
+            <nav>
+                <ul>
+                    <li><a onclick="onDisplaySection('.gallery')" href="#">Gallery</a></li>
+                    <li><a onclick="onDisplaySection('.meme-gallery')" href="#">Memes</a></li>
+                    <li><a onclick="" href="#">About</a></li>
+                </ul>
+                <img src="img/icons/x.png" class="menu-close-btn" onclick="onCloseCurrentModal()" />
+                <img src="img/icons/menu.png" class="menu-btn" onclick="onDisplayMenu()" />
+            </nav>
+        </header>
+        <!--Main-->
+        <main>
+            <!--Gallery section-->
+            <section class="gallery">
+                <div class="search-box">
+                    <input class="search-bar" type="text" oninput="onSearch(this)"
+                        placeholder="Enter search keyword"><img src="img/icons/search-icon.png" /></input>
+                </div>
+                <div class="word-cloud">dog house woman smile books drink weird <span class="search-more"><a href="#"
+                            onclick="">more...</a></span></div>
+                <div class="gallery-grid">
+
+                </div>
+
+            </section>
+            <!-- Meme Gallery Section -->
+            <section class="meme-gallery">
+                <h1>Meme Gallery</h1>
+                <div class="memes gallery-grid">
+                </div>
+            </section>
+            <!--Editor Section-->
+            <section class="editor">
+                <div class="done-modal">
+                    <img class="close-done-modal" src="img/icons/x.png" onclick="onCloseCurrentModal()">
+                    <h2>What would you like to do?</h2>
+                    <div>
+                        <img width=30 src="img/icons/facebook-logo.png">
+                        <a href="#" onclick="onShareToFaceBook()">Share on Facebook</a>
+                    </div>
+                    <div>
+                        <img width=30 src="img/icons/save.png">
+                        <a href="#" onclick="onDownloadMeme(this)">Save to device</a>
+                    </div>
+                    <div>
+                        <img width=30 src="img/favicon.png">
+                        <a href="#" onclick="onSaveToMemes()">Save to Memes Gallery</a>
+                        <span class="done-modal-info"></span>
+                    </div>
+                </div>
+                <div class="canvas-box">
+                    <canvas onmousemove="showcoords(event)"></canvas>
+                </div>
+                <div class="control-area">
+                    <div class="info">Info</div>
+                    <input class="meme-title" type="text" oninput="onChangeTitleText(this)"
+                        placeholder="Enter title text">
+                    <button class="control-btn arrows" onclick="onChangeSelectedTitle()"><img
+                            src="img/icons/updownarrows.png"></button>
+                    <button class="control-btn add" onclick="onAddTextTitle()"><img src="img/icons/add.png"></button>
+                    <button class="control-btn trash" onclick="onRemoveTextTitle()"><img
+                            src="img/icons/trash.png"></button>
+                    <button class="control-btn font-inc" onclick="onFontSizeChange(1)"><img
+                            src="img/icons/font-inc.png"></button>
+                    <div class="control-btn font-size"><span>Font size: 40</span></div>
+                    <button class="control-btn font-dec" onclick="onFontSizeChange(-1)"><img
+                            src="img/icons/font-dec.png"></button>
+                    <button class="control-btn fill"><input type="color" class="fill"
+                            onchange="onChangeFill(this)"></input><img src="img/icons/fill.png" /></button>
+                    <button class="control-btn stroke"><input type="color" class="fill"
+                            onchange="onChangeStroke(this)"></input><img src="img/icons/stroke.png" /></button>
+                    <button class="control-btn align left" onclick="onChangeAlign('left',this)"><img
+                            src="img/icons/align-left.png"></button>
+                    <button class="control-btn align center" onclick="onChangeAlign('center',this)"><img
+                            src="img/icons/align-center.png"></button>
+                    <button class="control-btn align right" onclick="onChangeAlign('right',this)"><img
+                            src="img/icons/align-right.png"></button>
+                    <select onchange="onChangeFont(this)" class="font-picker">
+                        <option value="impact">Impact</option>
+                        <option value="Arial Black">Arial Black</option>
+                        <option value="Comic Sans MS">Comic Sans</option>
+                        <option value="Tahoma">Tahoma</option>
+                    </select>
+                    <button class="control-btn done-btn" onclick="onDisplayDoneModal(true)">I'm Done <img
+                            src="img/icons/facebook-logo.png" /> <img src="img/icons/save.png" />
+                    </button>
+                </div>
+            </section>
+        </main>
+
+
+        <!--Footer-->
+        <footer>
+            <img src="img/logo.png">
+            Coffeerights 2020&copy Idan Benjamin
+        </footer>
+
+    </div>
+
+    <script src="js/storage-service.js"></script>
+    <script src="js/meme-service.js"></script>
+    <script src="js/gallery-controller.js"></script>
+    <script src="js/memegallery-controller.js"></script>
+    <script src="js/editor-controller.js"></script>
+    <script src="js/main-controller.js"></script>
+</body>
+
+</html>

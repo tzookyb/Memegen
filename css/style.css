@@ -12,7 +12,6 @@
 body {
     margin: 0;
     font-family: Montserrat;
-    /* margin-bottom: 30px; */
 }
 
 input:focus, select:focus, textarea:focus, button:focus {
@@ -352,12 +351,13 @@ main {
     max-height: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
+    padding: 5px;
 }
 
 canvas {
-    /* max-height: 45vh; */
+    max-height: 45vh;
     max-width: 100%;
-    padding: 5px;
 }
 
 .control-area {
@@ -562,10 +562,12 @@ footer img {
     .logo {
         max-width: 300px;
     }
+    .canvas-box {
+        padding: 20px;
+    }
     canvas {
         max-height: 100%;
         max-width: 100%;
-        padding: 20px;
     }
     main {
         padding-right: 35px;

@@ -14,6 +14,8 @@ function onInit() {
     galleryRenderKeywords();
     memeGalleryRender();
     onShowGallery();
+    initEditor();
+    initCanvas();
 }
 
 function onShowGallery() {
@@ -59,4 +61,10 @@ function onShowDoneModal() {
     gElBody.classList.add('modal-open');
     document.querySelector('.done-modal').style.display = 'flex';
     isModalShown = true;
+}
+
+function initEditor() {
+    document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
+        if (ev.keyCode === 13) onAddTextTitle();
+    });
 }

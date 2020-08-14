@@ -135,11 +135,11 @@ function saveTitleSettings(textWidth) {
             align: gTitleSettings.align,
             font: gTitleSettings.font,
             fontSize: gTitleSettings.fontSize,
-            titleRect: getTitleRect(gTitleSettings.x, gTitleSettings.y, textWidth, gTitleSettings.align, gTitleSettings.fontSize)
+            titleArea: getTitleArea(gTitleSettings.x, gTitleSettings.y, textWidth, gTitleSettings.align, gTitleSettings.fontSize)
         });
 }
 
-function getTitleRect(x1, y1, width, align, fontSize) {
+function getTitleArea(x1, y1, width, align, fontSize) {
     let x;
     switch (align) {
         case 'center':

@@ -1,13 +1,8 @@
 'use strict'
-const gCanvas = document.querySelector('canvas');
-const gCtx = gCanvas.getContext('2d');
+
 var gMeme = {};
 var gTitleSettings = {};
 var gIsTitleSelected = false;
-
-document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
-    if (ev.keyCode === 13) onAddTextTitle();
-});
 
 function resetPrefs() {
     gMeme = null;
@@ -28,13 +23,24 @@ function resizeCanvas(width, height) {
     gCanvas.height = height;
 }
 
-function editorInitCanvas(meme) {
+function editorInit(meme) {
     gMeme = meme;
     renderMeme();
     onShowEditor();
 }
 
-function onChangeSelectedTitle() {
+function setSelectedTitle(idx) {
+    if (idx === null) {
+        gMeme.selectedTitleIdx = null;
+        gIsTitleSelected = false;
+        document.querySelector('.meme-title').value = '';
+    } else {
+        gMeme.selectedTitleIdx = idx;
+        gIsTitleSelected = true;
+        document.querySelector('.meme-title').value = gMeme.titles[gMeme.selectedTitleIdx].text;
+    }
+}
+function onChangeSelectedTitle(idx) {
     switch (gMeme.titles.length) {
         case 0:
             return;
@@ -53,7 +59,6 @@ function onChangeSelectedTitle() {
     }
     gIsTitleSelected = true;
     document.querySelector('.meme-title').value = gMeme.titles[gMeme.selectedTitleIdx].text;
-    console.log(gMeme.selectedTitleIdx);
 }
 
 function setTitleYLocation() {
@@ -67,6 +72,7 @@ function onAddTextTitle(isRerender = false, isChange = false) {
         setTitleYLocation();
         let input = document.querySelector('.meme-title');
         gTitleSettings.text = input.value;
+        gCtx.font = gTitleSettings.fontSize + 'px ' + gTitleSettings.font;
         var textWidth = gCtx.measureText(gTitleSettings.text).width;
         saveTitleSettings(textWidth);
         input.value = '';
@@ -88,6 +94,8 @@ function renderMeme(isChange) {
         resizeCanvas(img.width, img.height);
         gCtx.drawImage(img, 0, 0, img.width, img.height);
         gTitleSettings.x = img.width / 2;
+        gMeme.initialWidth = img.width;
+        gMeme.initialHeight = img.height;
         gMeme.titles.forEach((title) => {
             gTitleSettings = {
                 x: title.x,
@@ -178,7 +186,7 @@ function onShareToFaceBook() {
 }
 function onSaveToMemes() {
     const imgData = gCanvas.toDataURL();
-    var meme = { id: gSavedMemeId++, imgData: imgData, editorData: gMeme };
+    var meme = { id: gSavedMemeId++, imgData, editorData: gMeme };
     addToMemeGallery(meme);
     memeGalleryRender();
     showDoneModalInfo('Added to Meme Gallery Successfuly! Redirecting...');
@@ -189,49 +197,3 @@ function showDoneModalInfo(str) {
 
     setTimeout(() => { document.querySelector('.done-modal-info').innerText = '' }, 5000);
 }
-//
-
-// function drawRect(x1, y1, x2, y2) {
-    //     gCtx.beginPath();
-//     gCtx.rect(x1, y1, x2, y2);
-//     gCtx.lineWidth = '1';
-//     gCtx.strokeStyle = '#000';
-//     gCtx.stroke();
-// }
-
-
-// function saveAndRestoreExample() {
-//     gCtx.lineWidth = '2';
-//     gCtx.font = '40px Ariel';
-//     gCtx.strokeStyle = 'red';
-//     gCtx.fillStyle = 'white';
-//     drawText('before save', 100, 60);
-//     gCtx.save();
-//     drawText('after save', 100, 160)
-//     gCtx.strokeStyle = 'black';
-//     gCtx.fillStyle = 'red';
-//     drawText('after save and change', 20, 260);
-//     gCtx.restore();
-//     drawText('after restore', 100, 360);
-// }
-
-// function markCurrentTitle() {
-    //     if (gCurrMeme.isTitleSelected) renderMeme(gCurrMeme.id);
-
-    //     let idx = gCurrMeme.selectedTitleIdx;
-//     let title = gCurrMeme.titles[idx];
-//     let x;
-//     switch (title.align) {
-    //         case 'center':
-//             x = title.x - title.textWidth / 2;
-//             break;
-//         case 'left':
-//             x1 = title.x
-//             break;
-//         case 'right':
-//             x1 = title.x - textPixels
-//             break;
-//     }
-//     let y = title.y - title.fontSize;
-//     drawRect(x, y, title.textWidth, y + title.fontSize);
-// }

@@ -22,7 +22,7 @@ function memeGalleryRender() {
 
 function onEditMeme(id) {
     const meme = getSavedMeme(id);
-    editorInitCanvas(meme);
+    editorInit(meme);
 }
 function onDeleteMeme(id) {
     deleteMeme(id);

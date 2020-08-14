@@ -18,7 +18,7 @@ function galleryRender() {
 }
 function onEditImage(id) {
     const meme = getGalleryImages(id);
-    editorInitCanvas(meme);
+    editorInit(meme);
 }
 
 function galleryRenderKeywords() {

@@ -1,153 +1,155 @@
 'use strict'
 const gCanvas = document.querySelector('canvas');
 const gCtx = gCanvas.getContext('2d');
-var gCurrMeme = {};
-var gCurrSelections = {};
-
-var gElDoneModalInfo = document.querySelector('.done-modal');
+var gMeme = {};
+var gTitleSettings = {};
+var gIsTitleSelected = false;
 
 document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
     if (ev.keyCode === 13) onAddTextTitle();
 });
 
 function resetPrefs() {
-    gCurrMeme = null;
-    gCurrSelections = { x: 0, y: 50, font: 'Impact', fontSize: 40, stroke: '#fff', fill: '#000', align: 'center' };
-    onChangeAlign(gCurrSelections.align, document.querySelector(`.${gCurrSelections.align}`));
+    gMeme = null;
+    gTitleSettings = {
+        x: 0,
+        y: 50,
+        font: 'Impact',
+        fontSize: 40,
+        stroke: '#fff',
+        fill: '#000',
+        align: 'center'
+    };
+    onChangeAlign(gTitleSettings.align, document.querySelector(`.${gTitleSettings.align}`));
 }
+
 function resizeCanvas(width, height) {
     gCanvas.width = width;
     gCanvas.height = height;
 }
-function onEditImage(id) {
-    gCurrMeme = getImages(id);
-    drawImageToCanvas(gCurrMeme);
-    onDisplaySection('.editor');
-    ShowEditorInfo();
+
+function editorInitCanvas(meme) {
+    gMeme = meme;
+    renderMeme();
+    onShowEditor();
 }
-function drawImageToCanvas(image) {
+
+function onChangeSelectedTitle() {
+    switch (gMeme.titles.length) {
+        case 0:
+            return;
+        case 1:
+            gMeme.selectedTitleIdx = 0;
+            break;
+        default:
+            if (gMeme.selectedTitleIdx + 1 === gMeme.titles.length) {
+                gMeme.selectedTitleIdx = null;
+                document.querySelector('.meme-title').value = '';
+                gIsTitleSelected = false;
+                return;
+            }
+            if (gMeme.selectedTitleIdx === null) gMeme.selectedTitleIdx = 0;
+            else gMeme.selectedTitleIdx++;
+    }
+    gIsTitleSelected = true;
+    document.querySelector('.meme-title').value = gMeme.titles[gMeme.selectedTitleIdx].text;
+    console.log(gMeme.selectedTitleIdx);
+}
+
+function setTitleYLocation() {
+    let titleCount = gMeme.titles.length;
+    if (!titleCount) gTitleSettings.y = gTitleSettings.fontSize + 10;
+    else if (titleCount === 1) gTitleSettings.y = gCanvas.height - gTitleSettings.fontSize + 10;
+    else if (titleCount > 1) gTitleSettings.y = gCanvas.height / 2;
+}
+function onAddTextTitle(isRerender = false, isChange = false) {
+    if (!isRerender) {
+        setTitleYLocation();
+        let input = document.querySelector('.meme-title');
+        gTitleSettings.text = input.value;
+        var textWidth = gCtx.measureText(gTitleSettings.text).width;
+        saveTitleSettings(textWidth);
+        input.value = '';
+    }
+    gCtx.lineWidth = '1';
+    gCtx.font = gTitleSettings.fontSize + 'px ' + gTitleSettings.font;
+    gCtx.strokeStyle = gTitleSettings.stroke;
+    gCtx.fillStyle = gTitleSettings.fill;
+    gCtx.textAlign = gTitleSettings.align;
+    gCtx.fillText(gTitleSettings.text, gTitleSettings.x, gTitleSettings.y);
+    gCtx.strokeText(gTitleSettings.text, gTitleSettings.x, gTitleSettings.y);
+
+    if (!isChange) gIsTitleSelected = false;
+}
+
+function renderMeme(isChange) {
     var img = new Image()
     img.onload = () => {
         resizeCanvas(img.width, img.height);
         gCtx.drawImage(img, 0, 0, img.width, img.height);
-        gCurrSelections.x = img.width / 2;
-    }
-    img.src = image.url;
-}
-function renderMeme(meme) {
-    drawImageToCanvas(meme.url);
-    meme.titles.forEach((title) => {
-        gCurrSelection = { x: title.x, y: title.y, font: title.font, fontSize: title.fontSize, stroke: title.stroke, align: title.align, text: title.text };
-        onAddTextTitle(true);
-    })
-}
-// BUTTONS FUNCTIONALITY //
-function ShowEditorInfo(str) {
-    let info = document.querySelector('.info');
-    info.style.color = '';
-    if (str) {
-        setTimeout(ShowEditorInfo, 2500);
-        info.style.color = 'red';
-        info.innerText = str;
-        return;
-    }
-    let currTitle = (gCurrMeme.currTitleIdx === gCurrMeme.titles.length) ? 'new' : gCurrMeme.currTitleIdx + 1;
-    info.innerText = `Currently selected title: ${currTitle}`;
-}
-function onAddTextTitle(isReRender = false) {
-    if (!isReRender) {
-        if (gCurrMeme.currTitleIdx === 1) gCurrSelections.y = gCanvas.height - gCurrSelections.fontSize + 10;
-        else if (gCurrMeme.currTitleIdx > 1) gCurrSelections.y = gCanvas.height / 2;
-        var text = document.querySelector('.meme-title').value;
-        gCurrMeme.titles.push(
-            {
-                titleIdx: gCurrMeme.currTitleIdx++,
-                text: text,
-                x: gCurrSelections.x,
-                y: gCurrSelections.y,
-                stroke: gCurrSelections.stroke,
-                fill: gCurrSelections.fill,
-                align: gCurrSelections.align,
-                font: gCurrSelections.font,
-                fontSize: gCurrSelections.fontSize
-            });
-    } else {
-        var text = gCurrSelections.text;
-    };
+        gTitleSettings.x = img.width / 2;
+        gMeme.titles.forEach((title) => {
+            gTitleSettings = {
+                x: title.x,
+                y: title.y,
+                font: title.font,
+                fontSize: title.fontSize,
+                stroke: title.stroke,
+                align: title.align,
+                text: title.text
+            };
 
-    gCtx.lineWidth = '1';
-    gCtx.strokeStyle = gCurrSelections.stroke;
-    gCtx.fillStyle = gCurrSelections.fill;
-    gCtx.font = gCurrSelections.fontSize + 'px ' + gCurrSelections.font;
-    gCtx.textAlign = gCurrSelections.align;
-    gCtx.fillText(text, gCurrSelections.x, gCurrSelections.y);
-    gCtx.strokeText(text, gCurrSelections.x, gCurrSelections.y);
-    document.querySelector('.meme-title').value = '';
-}
-function markCurrentTitle() {
-    let idx = gCurrMeme.currTitleIdx;
-    if (idx >= gCurrMeme.titles.length) return;
-    let title = gCurrMeme.titles[idx];
-    gCtx.font = title.fontSize + 'px' + title.font;
-    let textLength = gCtx.measureText(title.text);
-    let x;
-    switch (title.align) {
-        case 'center':
-            x = title.x - textLength / 2;
-            break;
-        case 'left':
-            x1 = title.x
-            break;
-        case 'right':
-            x1 = title.x - textPixels
-            break;
+            onAddTextTitle(true, isChange);
+        })
     }
-    let y = title.y - fontSize;
-    drawRect(x, y, textPixels,);
+    img.src = gMeme.url;
 }
+
 function onChangeTitleText(el) {
-
+    if (!gIsTitleSelected) return;
+    let idx = gMeme.selectedTitleIdx;
+    gMeme.titles[idx].text = el.value;
+    renderMeme(true);
 }
 function onFontSizeChange(value) {
-    gCurrSelections.fontSize += value;
-    gCurrSelections.y += value;
-    document.querySelector('.font-size span').innerHTML = `Font size: ${gCurrSelections.fontSize}`;
+    gTitleSettings.fontSize += value;
+    gTitleSettings.y += value;
+    document.querySelector('.font-size span').innerHTML = `Font size: ${gTitleSettings.fontSize}`;
 }
 function onChangeFont(el) {
-    gCurrSelections.font = el.value;
+    gTitleSettings.font = el.value;
 }
 function onChangeStroke(el) {
-    gCurrSelections.stroke = el.value;
+    gTitleSettings.stroke = el.value;
 }
 function onChangeFill(el) {
-    gCurrSelections.fill = el.value;
+    gTitleSettings.fill = el.value;
 }
 function onChangeAlign(align, el) {
-    gCurrSelections.align = align;
-    if (align === 'left') gCurrSelections.x = 10;
-    else if (align === 'center') gCurrSelections.x = gCanvas.width / 2;
-    else if (align === 'right') gCurrSelections.x = gCanvas.width - 10;
+    gTitleSettings.align = align;
+    if (align === 'left') gTitleSettings.x = 10;
+    else if (align === 'center') gTitleSettings.x = gCanvas.width / 2;
+    else if (align === 'right') gTitleSettings.x = gCanvas.width - 10;
 
     let alignBtns = document.querySelectorAll('.align')
-    alignBtns.forEach((btn) => { btn.classList.remove('active') });
-    if (el) el.classList.add('active');
-}
-function onChangeSelectedTitle() {
-    if (!gCurrMeme.titles.length) {
-        ShowEditorInfo('No titles to scroll through');
-        return;
-    }
-    else if (gCurrMeme.currTitleIdx >= gCurrMeme.titles.length) gCurrMeme.currTitleIdx = 0;
-    else gCurrMeme.currTitleIdx++;
-    markCurrentTitle();
-    ShowEditorInfo();
-}
-function onRemoveTextTitle() {
-    if (gCurrMeme.currTitleIdx === gCurrMeme.titles.length) ShowEditorInfo('Cannot remove new title.');
-    gCurrMeme.titles.splice(gCurrMeme.currTitleIdx);
+    alignBtns.forEach((btn) => {
+        if (btn.classList.contains(align)) btn.classList.add('active');
+        else btn.classList.remove('active');
+    });
 }
 
-// DONE MODAL FUNCTIONALITY//
+function onRemoveTextTitle() {
+    if (!gMeme.titles.length || !gIsTitleSelected) {
+        return;
+    }
+    gMeme.titles.splice(gMeme.selectedTitleIdx, 1);
+    gMeme.selectedTitleIdx = 0;
+    renderMeme();
+    gIsTitleSelected = false;
+    document.querySelector('.meme-title').value = '';
+}
+
+// DONE-MODAL FUNCTIONALITY //
 function onDownloadMeme(el) {
     const data = gCanvas.toDataURL();
     el.href = data;
@@ -176,31 +178,28 @@ function onShareToFaceBook() {
 }
 function onSaveToMemes() {
     const imgData = gCanvas.toDataURL();
-    var meme = { imgData: imgData, editorData: gCurrMeme };
+    var meme = { id: gSavedMemeId++, imgData: imgData, editorData: gMeme };
     addToMemeGallery(meme);
+    memeGalleryRender();
     showDoneModalInfo('Added to Meme Gallery Successfuly! Redirecting...');
-    setTimeout((onDisplaySection('.meme-gallery')), 3000);
+    setTimeout(() => { onShowMemes }, 3000);
 }
 function showDoneModalInfo(str) {
     document.querySelector('.done-modal-info').innerText = str;
+
     setTimeout(() => { document.querySelector('.done-modal-info').innerText = '' }, 5000);
 }
-// 
+//
 
-function drawRect(x1, y1, x2, y2) {
-    gCtx.beginPath();
-    gCtx.rect(x1, y1, x2, y2);
-    gCtx.lineWidth = '1';
-    gCtx.strokeStyle = '#fff';
-    gCtx.stroke();
-}
+// function drawRect(x1, y1, x2, y2) {
+    //     gCtx.beginPath();
+//     gCtx.rect(x1, y1, x2, y2);
+//     gCtx.lineWidth = '1';
+//     gCtx.strokeStyle = '#000';
+//     gCtx.stroke();
+// }
 
-function showcoords(ev) {
-    console.clear();
-    console.log(ev)
-    console.log('x:', ev.offsetX);
-    console.log('y:', ev.offsetY);
-}
+
 // function saveAndRestoreExample() {
 //     gCtx.lineWidth = '2';
 //     gCtx.font = '40px Ariel';
@@ -214,4 +213,25 @@ function showcoords(ev) {
 //     drawText('after save and change', 20, 260);
 //     gCtx.restore();
 //     drawText('after restore', 100, 360);
+// }
+
+// function markCurrentTitle() {
+    //     if (gCurrMeme.isTitleSelected) renderMeme(gCurrMeme.id);
+
+    //     let idx = gCurrMeme.selectedTitleIdx;
+//     let title = gCurrMeme.titles[idx];
+//     let x;
+//     switch (title.align) {
+    //         case 'center':
+//             x = title.x - title.textWidth / 2;
+//             break;
+//         case 'left':
+//             x1 = title.x
+//             break;
+//         case 'right':
+//             x1 = title.x - textPixels
+//             break;
+//     }
+//     let y = title.y - title.fontSize;
+//     drawRect(x, y, title.textWidth, y + title.fontSize);
 // }

@@ -10,7 +10,26 @@
 </head>
 
 <body onload="onInit()">
-    <div class="menu-screen" onclick="onCloseCurrentModal()"></div>
+    <div class="menu-screen" onclick="onCloseMenu()"></div>
+    <div class="modal-screen" onclick="onHideDoneModal()">
+        <div class="done-modal">
+            <img class="close-done-modal" src="img/icons/x.png" onclick="onHideDoneModal()">
+            <h2>What would you like to do?</h2>
+            <div>
+                <img width=30 src="img/icons/facebook-logo.png">
+                <a href="#" onclick="onShareToFaceBook()">Share on Facebook</a>
+            </div>
+            <div>
+                <img width=30 src="img/icons/save.png">
+                <a href="#" onclick="onDownloadMeme(this)">Save to device</a>
+            </div>
+            <div>
+                <img width=30 src="img/favicon.png">
+                <a href="#" onclick="onSaveToMemes()">Save to Memes Gallery</a>
+                <span class="done-modal-info"></span>
+            </div>
+        </div>
+    </div>
     <div class="page-container">
         <div class="about-modal">
             <div class="about-image">f</div>
@@ -18,17 +37,17 @@
         </div>
         <!--Header-->
         <header>
-            <div class="logo">
+            <div onclick="onInit()" class="logo">
                 <img src="img/logo.png">
             </div>
             <nav>
                 <ul>
-                    <li><a onclick="onDisplaySection('.gallery')" href="#">Gallery</a></li>
-                    <li><a onclick="onDisplaySection('.meme-gallery')" href="#">Memes</a></li>
+                    <li><a onclick="onShowGallery()" href="#">Gallery</a></li>
+                    <li><a onclick="onShowMemes()" href="#">Memes</a></li>
                     <li><a onclick="" href="#">About</a></li>
                 </ul>
-                <img src="img/icons/x.png" class="menu-close-btn" onclick="onCloseCurrentModal()" />
-                <img src="img/icons/menu.png" class="menu-btn" onclick="onDisplayMenu()" />
+                <img src="img/icons/x.png" class="menu-close-btn" onclick="onCloseMenu()" />
+                <img src="img/icons/menu.png" class="menu-btn" onclick="onOpenMenu()" />
             </nav>
         </header>
         <!--Main-->
@@ -36,11 +55,14 @@
             <!--Gallery section-->
             <section class="gallery">
                 <div class="search-box">
-                    <input class="search-bar" type="text" oninput="onSearch(this)"
+                    <input class="search-bar" type="search" oninput="onSearch(this)"
                         placeholder="Enter search keyword"><img src="img/icons/search-icon.png" /></input>
                 </div>
-                <div class="word-cloud">dog house woman smile books drink weird <span class="search-more"><a href="#"
-                            onclick="">more...</a></span></div>
+                <span>Search suggestions:</span>
+                <div class="word-cloud">
+
+                </div>
+
                 <div class="gallery-grid">
 
                 </div>
@@ -54,28 +76,11 @@
             </section>
             <!--Editor Section-->
             <section class="editor">
-                <div class="done-modal">
-                    <img class="close-done-modal" src="img/icons/x.png" onclick="onCloseCurrentModal()">
-                    <h2>What would you like to do?</h2>
-                    <div>
-                        <img width=30 src="img/icons/facebook-logo.png">
-                        <a href="#" onclick="onShareToFaceBook()">Share on Facebook</a>
-                    </div>
-                    <div>
-                        <img width=30 src="img/icons/save.png">
-                        <a href="#" onclick="onDownloadMeme(this)">Save to device</a>
-                    </div>
-                    <div>
-                        <img width=30 src="img/favicon.png">
-                        <a href="#" onclick="onSaveToMemes()">Save to Memes Gallery</a>
-                        <span class="done-modal-info"></span>
-                    </div>
-                </div>
                 <div class="canvas-box">
-                    <canvas onmousemove="showcoords(event)"></canvas>
+                    <canvas></canvas>
                 </div>
                 <div class="control-area">
-                    <div class="info">Info</div>
+                    <div class="info"></div>
                     <input class="meme-title" type="text" oninput="onChangeTitleText(this)"
                         placeholder="Enter title text">
                     <button class="control-btn arrows" onclick="onChangeSelectedTitle()"><img
@@ -104,7 +109,7 @@
                         <option value="Comic Sans MS">Comic Sans</option>
                         <option value="Tahoma">Tahoma</option>
                     </select>
-                    <button class="control-btn done-btn" onclick="onDisplayDoneModal(true)">I'm Done <img
+                    <button class="control-btn done-btn" onclick="onShowDoneModal(true)">I'm Done <img
                             src="img/icons/facebook-logo.png" /> <img src="img/icons/save.png" />
                     </button>
                 </div>
@@ -120,7 +125,7 @@
 
     </div>
 
-    <script src="js/storage-service.js"></script>
+    <script src="js/utils-storage.js"></script>
     <script src="js/meme-service.js"></script>
     <script src="js/gallery-controller.js"></script>
     <script src="js/memegallery-controller.js"></script>

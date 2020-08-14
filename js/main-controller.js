@@ -1,47 +1,62 @@
 'use strict'
-var gSections = ['.gallery', '.editor', '.meme-gallery']
-var gCurrSection = '.gallery';
-var gCurrOpenModal = null;
 
 var gElBody = document.querySelector('body');
+var isMenuOpen = false;
+var isModalShown = false;
+var gGallerySection = document.querySelector('.gallery');
+var gEditorSection = document.querySelector('.editor');
+var gMemeGallerySection = document.querySelector('.meme-gallery');
 
 function onInit() {
-    resetPrefs()
-    onLoadImagesGallery();
-    renderImagesGallery();
-    renderMemeGallery();
-    onDisplaySection(gCurrSection);
-}
-function onDisplaySection(screen) {
-    onCloseCurrentModal();
-    gSections.forEach((section) => {
-        document.querySelector(section).style.display = (section === screen) ? 'flex' : 'none';
-    })
-}
-function onDisplayScreen() {
-    gElBody.classList.add('screen');
-}
-function onCloseCurrentModal() {
-    gElBody.classList.remove('screen');
-    if (gCurrOpenModal === '.menu-open') {
-        gElBody.classList.remove('menu-open');
-        document.querySelector('.menu-close-btn').style.display = "none";
-        document.querySelector('.menu-btn').style.display = "block";
-        gCurrOpenModal = null;
-    }
-    if (gCurrOpenModal) document.querySelector(gCurrOpenModal).style.display = 'none';
+    loadSettings();
+    resetPrefs();
+    galleryRender();
+    galleryRenderKeywords();
+    memeGalleryRender();
+    onShowGallery();
 }
 
-function onDisplayDoneModal() {
-    gCurrOpenModal = '.done-modal'
-    onDisplayScreen();
-    document.querySelector('.done-modal').style.display = 'flex';
+function onShowGallery() {
+    if (isMenuOpen) onCloseMenu();
+    gEditorSection.style.display = 'none';
+    gMemeGallerySection.style.display = 'none';
+    gGallerySection.style.display = 'flex';
 }
-function onDisplayMenu() {
-    gCurrOpenModal = '.menu-open'
-    onDisplayScreen();
-    document.querySelector('body').classList.add('menu-open');
-    document.querySelector('body').classList.add('screen');
-    document.querySelector('.menu-btn').style.display = "none";
-    document.querySelector('.menu-close-btn').style.display = "block";
+function onShowMemes() {
+    if (isMenuOpen) onCloseMenu();
+    gEditorSection.style.display = 'none';
+    gGallerySection.style.display = 'none';
+    gMemeGallerySection.style.display = 'flex';
+}
+function onShowEditor() {
+    if (isMenuOpen) closeMenu();
+    gGallerySection.style.display = 'none';
+    gMemeGallerySection.style.display = 'none';
+    gEditorSection.style.display = 'flex';
+}
+
+function onOpenMenu() {
+    gElBody.classList.add('menu-open');
+    document.querySelector('.menu-btn').style.display = 'none';
+    document.querySelector('.menu-close-btn').style.display = 'block';
+    isMenuOpen = true;
+}
+function onCloseMenu() {
+    if (isModalShown) onHideDoneModal();
+    gElBody.classList.remove('menu-screen');
+    gElBody.classList.remove('menu-open');
+    document.querySelector('.menu-close-btn').style.display = '';
+    document.querySelector('.menu-btn').style.display = '';
+    isMenuOpen = false;
+}
+
+function onHideDoneModal() {
+    gElBody.classList.remove('modal-open');
+    document.querySelector('.done-modal').style.display = 'none';
+    isModalShown = false;
+}
+function onShowDoneModal() {
+    gElBody.classList.add('modal-open');
+    document.querySelector('.done-modal').style.display = 'flex';
+    isModalShown = true;
 }

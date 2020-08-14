@@ -48,14 +48,16 @@ header {
     z-index: 2;
     width: 100%;
     background-color: #ff7f00;
-    min-height: 70px;
+    min-height: 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0px -1px 5px;
+    box-shadow: 0px 1px 5px;
 }
 
 .logo {
+    cursor: pointer;
+    min-width: 120px;
     max-width: 150px;
     margin-left: 20px;
 }
@@ -82,7 +84,8 @@ nav {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 10px;
+    margin-right: 10px;
 }
 
 ul {
@@ -110,12 +113,14 @@ body.menu-open li {
 }
 
 body.menu-open ul {
-    transform: translateY(65px);
+    transform: translateY(60px);
     margin: 0
 }
 
-.menu-screen {
+.menu-screen, .modal-screen {
     position: fixed;
+    display: flex;
+    justify-content: center;
     top: 0;
     left: 0;
     width: 100%;
@@ -128,7 +133,7 @@ body.menu-open ul {
     z-index: 1;
 }
 
-body.screen .menu-screen {
+body.menu-open .menu-screen, body.modal-open .modal-screen {
     opacity: 1;
     visibility: visible;
 }
@@ -141,8 +146,7 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 80px;
-    margin-bottom: 70px;
+    margin-top: 70px;
     width: 100%;
     height: 100%;
 }
@@ -181,11 +185,13 @@ main {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: 100%;
 }
 
 /* GALLERY */
 
 .gallery {
+    display: none;
     flex-direction: column;
     align-items: center;
     width: 100%;
@@ -197,22 +203,40 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 250px;
+    width: 80vw;
     margin-bottom: 5px;
 }
 
+.more {
+    cursor: pointer;
+    color: blue;
+    font-weight: bold;
+    clear: right;
+}
+
+.search-words {
+    cursor: pointer;
+}
+
+.search-words:hover {
+    color: #3f6ef0;
+    font-weight: bold;
+}
+
 .search-box input {
+    margin-top: 10px;
     width: 100%;
-    height: 25px;
+    height: 2rem;
     border: 0;
     border-radius: 12px;
     text-align: center;
+    font-size: 1rem;
 }
 
 .search-box img {
     position: absolute;
-    top: 2px;
-    left: 10px;
+    top: 1.125rem;
+    left: 0.625rem;
     width: 20px;
 }
 
@@ -222,13 +246,21 @@ main {
     text-align: center;
 }
 
+.more-words {
+    display: none;
+}
+
 .gallery-grid {
     width: 100%;
     padding: 20px;
     display: grid;
-    grid-gap: 5px;
-    grid-template-columns: minmax(165px, 1fr);
+    grid-gap: 10px;
+    grid-template-columns: minmax(160px, 1fr);
     align-items: center;
+}
+
+.gallery-image {
+    position: relative;
 }
 
 .gallery-image img:hover {
@@ -236,26 +268,30 @@ main {
     transition: box-shadow 0.3s;
 }
 
-.gallery-image img {
+.gallery-image img:not(.bin) {
     width: 100%;
     height: 100%;
     cursor: pointer;
 }
 
-/* Editor */
-
-.close-done-modal {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 40px;
-    cursor: pointer;
+.bin {
+    display: none;
 }
+
+.gallery-image:hover .bin {
+    display: block;
+    position: absolute;
+    cursor: pointer;
+    right: 5px;
+    top: 5px;
+}
+
+/* Editor */
 
 .done-modal {
     display: none;
-    position: fixed;
     align-self: center;
+    position: fixed;
     z-index: 2;
     width: 100%;
     max-width: 500px;
@@ -269,18 +305,30 @@ main {
     color: #fff;
 }
 
+.close-done-modal {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 40px;
+    cursor: pointer;
+}
+
 .done-modal-info {
     margin-top: 20px;
     display: inline-block;
     color: #3f6ef0;
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: bold;
+}
+
+.done-modal h2 {
+    font-size: 1.3rem;
 }
 
 .done-modal a {
     color: #fff;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 0.8rem;
     font-weight: bold;
 }
 
@@ -295,7 +343,7 @@ main {
     height: 100%;
     flex-grow: 1;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #dcdcdc;
 }
 
@@ -307,19 +355,17 @@ main {
 }
 
 canvas {
-    max-height: 45vh;
+    /* max-height: 45vh; */
     max-width: 100%;
-    padding: 10px;
+    padding: 5px;
 }
 
 .control-area {
-    max-height: 30vh;
     display: grid;
-    grid-row-gap: 5px;
-    grid-column-gap: 10px;
+    grid-gap: 10px;
     grid-template-columns: repeat(5, 40px);
-    grid-template-rows: 1fr repeat(4, 40px) 1fr;
-    padding: 20px;
+    grid-template-rows: repeat(4, 40px) 1fr;
+    margin-bottom: 15px;
     justify-content: center;
 }
 
@@ -327,7 +373,8 @@ canvas {
 
 .control-area input {
     border-radius: 12px;
-    border: 0
+    border: 0;
+    cursor: pointer
 }
 
 .control-btn {
@@ -339,6 +386,7 @@ canvas {
 
 .control-btn:hover:not(.font-size) {
     background-color: #ff7f00;
+    cursor: pointer;
 }
 
 .control-btn img {
@@ -346,38 +394,40 @@ canvas {
     height: 20px;
 }
 
-.info {
+/* .info {
+    text-align: center;
+    grid-row: 1;
+    grid-column: span 5;
+} */
+
+.meme-title {
+    font-size: 1rem;
+    text-align: center;
     grid-row: 1;
     grid-column: span 5;
 }
 
-.meme-title {
-    text-align: center;
-    grid-row: 2;
-    grid-column: span 5;
-}
-
 .arrows {
-    grid-row: 3;
+    grid-row: 2;
     grid-column: 2;
 }
 
 .add {
-    grid-row: 3;
+    grid-row: 2;
     grid-column: 3;
 }
 
 .trash {
-    grid-row: 3;
+    grid-row: 2;
     grid-column: 4;
 }
 
 .font-inc {
-    grid-row: 4;
+    grid-row: 3;
 }
 
 .font-size {
-    grid-row: 4;
+    grid-row: 3;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -387,42 +437,42 @@ canvas {
 }
 
 .font-dec {
+    grid-row: 3;
+}
+
+.fill {
+    grid-row: 3;
+}
+
+.stroke {
+    grid-row: 3;
+}
+
+.align.left {
+    grid-row: 4;
+}
+
+.align.center {
+    grid-row: 4;
+}
+
+.align.right {
     grid-row: 4;
 }
 
 .font-picker {
-    grid-row: 5;
+    grid-row: 4;
     grid-column: span 2;
 }
 
-.fill {
-    grid-row: 4;
-}
-
-.stroke {
-    grid-row: 4;
-}
-
-.align.left {
-    grid-row: 5;
-}
-
-.align.center {
-    grid-row: 5;
-}
-
-.align.right {
-    grid-row: 5;
-}
-
 .done-btn {
-    margin-top: 20px;
-    grid-row: 6;
+    grid-row: 5;
     grid-column: span 5;
     padding: 10px;
     background-color: #3f6ef0;
     font-size: 1rem;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .active {
@@ -432,9 +482,7 @@ canvas {
 /* Footer Area */
 
 footer {
-    min-height: 70px;
-    border-top: solid 20px #dcdcdc;
-    position: fixed;
+    min-height: 60px;
     bottom: 0;
     width: 100%;
     flex-grow: 1;
@@ -444,6 +492,7 @@ footer {
     justify-content: space-evenly;
     align-items: center;
     font-size: 0.8rem;
+    box-shadow: 0px -1px 5px;
 }
 
 footer img {
@@ -456,9 +505,21 @@ footer img {
     .gallery-grid {
         grid-template-columns: repeat(2, minmax(165px, 1fr));
     }
+    /* .done-modal h2 {
+        font-size: 1.25rem;
+    }
+    .done-modal a {
+        font-size: 1rem;
+    } */
 }
 
 @media (min-width: 490px) {
+    html {
+        font-size: 18px;
+    }
+    .search-box {
+        max-width: 400px
+    }
     .logo {
         max-width: 200px;
     }
@@ -468,7 +529,7 @@ footer img {
     main {
         padding-left: 10px;
         padding-right: 10px;
-        margin-top: 100px;
+        margin-top: 80px;
     }
     .gallery-grid {
         grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
@@ -486,15 +547,14 @@ footer img {
 }
 
 @media (min-width: 555px) {
+    main {
+        margin-top: 105px;
+    }
     .logo {
         max-width: 250px;
     }
     ul {
         font-size: 1.5rem;
-    }
-    main {
-        height: 80%;
-        margin-top: 125px;
     }
 }
 
@@ -513,13 +573,14 @@ footer img {
     }
     .editor {
         flex-direction: row;
+        justify-content: center;
         align-items: center;
     }
     .control-area {
         max-height: initial;
         grid-gap: 15px;
         grid-template-columns: repeat(5, 50px);
-        grid-template-rows: 1fr repeat(4, 50px) 1fr;
+        grid-template-rows: repeat(4, 50px) 1fr;
     }
 }
 
@@ -527,6 +588,6 @@ footer img {
     .control-area {
         grid-gap: 20px;
         grid-template-columns: repeat(5, 60px);
-        grid-template-rows: 1fr repeat(4, 60px) 1fr;
+        grid-template-rows: repeat(4, 60px) 1fr;
     }
 }

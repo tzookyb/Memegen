@@ -1,8 +1,8 @@
 'use strict'
 
 var gElBody = document.querySelector('body');
-var isMenuOpen = false;
-var isModalShown = false;
+var gIsMenuOpen = false;
+var gIsModalShown = false;
 var gGallerySection = document.querySelector('.gallery');
 var gEditorSection = document.querySelector('.editor');
 var gMemeGallerySection = document.querySelector('.meme-gallery');
@@ -30,52 +30,75 @@ function showMessage(str, secsInterval) {
 
 }
 function onShowGallery() {
-    if (isMenuOpen) onCloseMenu();
-    gEditorSection.style.display = 'none';
-    gMemeGallerySection.style.display = 'none';
-    gGallerySection.style.display = 'flex';
+    if (gIsMenuOpen) onCloseMenu();
+    // gEditorSection.style.display = 'none';
+    // gMemeGallerySection.style.display = 'none';
+    // gGallerySection.style.display = 'flex';
+    gMemeGallerySection.classList.remove('show-section');
+    gEditorSection.classList.remove('show-section');
+    gGallerySection.classList.add('show-section');
 }
 function onShowMemes() {
-    if (isMenuOpen) onCloseMenu();
-    gEditorSection.style.display = 'none';
-    gGallerySection.style.display = 'none';
-    gMemeGallerySection.style.display = 'flex';
+    if (gIsMenuOpen) onCloseMenu();
+    // gGallerySection.style.display = 'none';
+    // gEditorSection.style.display = 'none';
+    // gMemeGallerySection.style.display = 'flex';
+    gGallerySection.classList.remove('show-section');
+    gEditorSection.classList.remove('show-section');
+    gMemeGallerySection.classList.add('show-section');
 }
 function onShowEditor() {
-    if (isMenuOpen) closeMenu();
-    gGallerySection.style.display = 'none';
-    gMemeGallerySection.style.display = 'none';
-    gEditorSection.style.display = 'flex';
+    if (gIsMenuOpen) closeMenu();
+    // gGallerySection.style.display = 'none';
+    // gMemeGallerySection.style.display = 'none';
+    // gEditorSection.style.display = 'flex';
+    gGallerySection.classList.remove('show-section');
+    gMemeGallerySection.classList.remove('show-section');
+    gEditorSection.classList.add('show-section');
 }
 
 function onOpenMenu() {
     gElBody.classList.add('menu-open');
     document.querySelector('.menu-btn').style.display = 'none';
     document.querySelector('.menu-close-btn').style.display = 'block';
-    isMenuOpen = true;
+    gIsMenuOpen = true;
 }
 function onCloseMenu() {
-    if (isModalShown) onHideDoneModal();
+    if (gIsModalShown) {
+        onHideDoneModal();
+        onHideAboutModal();
+    }
     gElBody.classList.remove('menu-screen');
     gElBody.classList.remove('menu-open');
     document.querySelector('.menu-close-btn').style.display = '';
     document.querySelector('.menu-btn').style.display = '';
-    isMenuOpen = false;
+    gIsMenuOpen = false;
 }
 
 function onHideDoneModal() {
     gElBody.classList.remove('modal-open');
     document.querySelector('.done-modal').style.display = 'none';
-    isModalShown = false;
+    gIsModalShown = false;
 }
 function onShowDoneModal() {
     gElBody.classList.add('modal-open');
     document.querySelector('.done-modal').style.display = 'flex';
-    isModalShown = true;
+    gIsModalShown = true;
 }
 
 function initEditor() {
     document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
         if (ev.keyCode === 13) onAddTextTitle();
     });
+}
+function onShowAboutModal() {
+    if (gIsMenuOpen) onCloseMenu();
+    gElBody.classList.add('about-open');
+    document.querySelector('.about-modal').style.display = 'block';
+    gIsModalShown = true;
+}
+function onHideAboutModal() {
+    gElBody.classList.remove('about-open');
+    document.querySelector('.about-modal').style.display = 'none';
+    gIsModalShown = false;
 }

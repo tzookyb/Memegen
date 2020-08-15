@@ -10,19 +10,17 @@
 </head>
 
 <body onload="onInit()">
-    <div style="font-family: 'Impact'"></div>
-    <div style="font-family: 'McLaren'"></div>
-    <div style="font-family: 'Lemon'"></div>
-    <div style="font-family: 'Comic Sans MS'"></div>
-    <div style="font-family: 'Arial Black'"></div>
+    <div style="font-family: 'Impact'" hidden>.</div>
+    <div style="font-family: 'McLaren'" hidden>.</div>
+    <div style="font-family: 'Lemon'" hidden>.</div>
+    <div style="font-family: 'Comic Sans MS'" hidden>.</div>
+    <div style="font-family: 'Arial Black'"hidden>.</div>
+    
     <div class="menu-screen flex-center" onclick="onCloseMenu()"></div>
     <div class="modal-screen flex-center" onclick="onHideDoneModal()"></div>
+    <div class="about-screen flex-center" onclick="onHideAboutModal()"></div>
 
     <div class="page-container">
-        <div class="about-modal">
-            <div class="about-image">f</div>
-            Hello
-        </div>
         <!--Header-->
         <header>
             <div onclick="onInit()" class="logo">
@@ -32,7 +30,7 @@
                 <ul>
                     <li><a onclick="onShowGallery()" href="#">Gallery</a></li>
                     <li><a onclick="onShowMemes()" href="#">Memes</a></li>
-                    <li><a onclick="" href="#">About</a></li>
+                    <li><a onclick="onShowAboutModal()" href="#">About</a></li>
                 </ul>
                 <img src="img/icons/x.png" class="menu-close-btn" onclick="onCloseMenu()" />
                 <img src="img/icons/menu.png" class="menu-btn" onclick="onOpenMenu()" />
@@ -40,8 +38,22 @@
         </header>
         <!--Main-->
         <main>
+            <div class="about-modal">
+                <img class="close-modal" src="img/icons/x.png" onclick="onHideAboutModal()"/>
+                <h1>Hi!</h1>
+                <p>That's Me!</p>
+                <p>don't be shy, follow me:</p>
+                <div class="social flex-center">
+                    <a href="https://github.com/tzookyb"><img class="github" width=60px
+                            src="img/icons/github-logo.png"></a>
+                    <a href="https://www.linkedin.com/in/idanbenjamin"><img class="linkedin" width=60px
+                            src="img/icons/linkedin-logo.png"></a>
+                </div>
+                <div class="about-image">
+                    <img src="img/about.jpg" /></div>
+            </div>
             <div class="done-modal">
-                <img class="close-done-modal" src="img/icons/x.png" onclick="onHideDoneModal()">
+                <img class="close-modal" src="img/icons/x.png" onclick="onHideDoneModal()"/>
                 <h2>What would you like to do?</h2>
                 <div class="flex-center">
                     <img width=30 src="img/favicon.png">
@@ -90,7 +102,8 @@
                         placeholder="Enter title text">
                     <button class="control-btn arrows" title="Change Selected Title" onclick="onSelectTitle()"><img
                             src="img/icons/updownarrows.png"></button>
-                    <button class="control-btn add" title="Add new title" onclick="onAddTextTitle()"><img src="img/icons/add.png"></button>
+                    <button class="control-btn add" title="Add new title" onclick="onAddTextTitle()"><img
+                            src="img/icons/add.png"></button>
                     <button class="control-btn trash" title="Remove title" onclick="onRemoveTextTitle()"><img
                             src="img/icons/trash.png"></button>
                     <button class="control-btn font-inc" title="Increase font size" onclick="onFontSizeChange(1)"><img
@@ -102,12 +115,12 @@
                             onchange="onChangeFill(this)"></input><img src="img/icons/fill.png" /></button>
                     <button class="control-btn stroke" title="Change stroke color"><input type="color" class="fill"
                             onchange="onChangeStroke(this)"></input><img src="img/icons/stroke.png" /></button>
-                    <button class="control-btn align left" title="Align text left" onclick="onChangeAlign('left',this)"><img
-                            src="img/icons/align-left.png"></button>
-                    <button class="control-btn align center" title="Align text center" onclick="onChangeAlign('center',this)"><img
-                            src="img/icons/align-center.png"></button>
-                    <button class="control-btn align right" title="Align text right" onclick="onChangeAlign('right',this)"><img
-                            src="img/icons/align-right.png"></button>
+                    <button class="control-btn align left" title="Align text left"
+                        onclick="onChangeAlign('left',this)"><img src="img/icons/align-left.png"></button>
+                    <button class="control-btn align center" title="Align text center"
+                        onclick="onChangeAlign('center',this)"><img src="img/icons/align-center.png"></button>
+                    <button class="control-btn align right" title="Align text right"
+                        onclick="onChangeAlign('right',this)"><img src="img/icons/align-right.png"></button>
                     <select onchange="onChangeFont(this)" title="Font option" class="font-picker">
                         <option value="Impact">Impact</option>
                         <option value="Mclaren">Mclaren</option>

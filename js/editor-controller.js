@@ -226,7 +226,7 @@ function onShareToFaceBook() {
         })
         .then(uploadedImgUrl => {
             uploadedImgUrl = encodeURIComponent(uploadedImgUrl)
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}`, '_blank')
+            window.open(`www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}`, '_blank')
         })
         .catch(function (err) {
             console.error(err)

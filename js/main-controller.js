@@ -31,27 +31,18 @@ function showMessage(str, secsInterval) {
 }
 function onShowGallery() {
     if (gIsMenuOpen) onCloseMenu();
-    // gEditorSection.style.display = 'none';
-    // gMemeGallerySection.style.display = 'none';
-    // gGallerySection.style.display = 'flex';
     gMemeGallerySection.classList.remove('show-section');
     gEditorSection.classList.remove('show-section');
     gGallerySection.classList.add('show-section');
 }
 function onShowMemes() {
     if (gIsMenuOpen) onCloseMenu();
-    // gGallerySection.style.display = 'none';
-    // gEditorSection.style.display = 'none';
-    // gMemeGallerySection.style.display = 'flex';
     gGallerySection.classList.remove('show-section');
     gEditorSection.classList.remove('show-section');
     gMemeGallerySection.classList.add('show-section');
 }
 function onShowEditor() {
     if (gIsMenuOpen) closeMenu();
-    // gGallerySection.style.display = 'none';
-    // gMemeGallerySection.style.display = 'none';
-    // gEditorSection.style.display = 'flex';
     gGallerySection.classList.remove('show-section');
     gMemeGallerySection.classList.remove('show-section');
     gEditorSection.classList.add('show-section');

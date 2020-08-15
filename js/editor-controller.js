@@ -101,8 +101,6 @@ function onSelectTitle(idx) {
     else if (gMeme.selectedTitleIdx === null) gMeme.selectedTitleIdx = 0;
     else if (gMeme.selectedTitleIdx + 1 === gMeme.titles.length) {
         gMeme.selectedTitleIdx = null;
-        gIsTitleSelected = false;
-        return;
     } else gMeme.selectedTitleIdx++;
     setSelectedTitle(gMeme.selectedTitleIdx);
 }

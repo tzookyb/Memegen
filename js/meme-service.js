@@ -76,6 +76,7 @@ function _createDefaultImgs() {
     _createImg('23.jpg', ['dog', 'funny', 'weird']);
     _createImg('24.jpg', ['film', 'lazer', 'finger']);
     _createImg('25.jpg', ['celeb', 'funny', 'shout']);
+    _createImg('26.jpg', ['celeb', 'how i met your mother', 'barney stinson', 'suit']);
 }
 
 function _createImg(filename, keywords) {

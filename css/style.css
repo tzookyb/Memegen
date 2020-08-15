@@ -702,4 +702,5 @@ footer img {
 
 .show-section {
     transform: translate3d(0, 0, 0);
+    position: relative;
 }

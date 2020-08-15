@@ -217,7 +217,7 @@ function onShareToFaceBook() {
     var imgToShare = gCanvas.toDataURL("image/jpeg");
     var formData = new FormData();
     formData.append('img', imgToShare);
-    fetch('http://ca-upload.com/here/upload.php', {
+    fetch('https://ca-upload.com/here/upload.php', {
         method: 'POST',
         body: formData
     })
@@ -226,7 +226,7 @@ function onShareToFaceBook() {
         })
         .then(uploadedImgUrl => {
             uploadedImgUrl = encodeURIComponent(uploadedImgUrl)
-            window.open(`http://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}`, '_blank')
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${uploadedImgUrl}&t=${uploadedImgUrl}`, '_blank')
         })
         .catch(function (err) {
             console.error(err)

@@ -30,7 +30,6 @@ function saveSettings() {
 }
 
 function setDefaults() {
-    debugger
     gId = 1;
     gSavedMemeId = 1;
     gGallery = [];
@@ -52,25 +51,31 @@ function getKeywords() {
 }
 
 function _createDefaultImgs() {
-    _createImg('1.jpg', ['trump', 'finger', 'face']);
-    _createImg('2.jpg', ['cute', 'dog']);
+    _createImg('1.jpg', ['trump', 'finger', 'politics', 'angry']);
+    _createImg('2.jpg', ['cute', 'dog', 'kiss']);
     _createImg('3.jpg', ['dog', 'baby', 'cute', 'sleep']);
-    _createImg('4.jpg', ['cute', 'cat', 'sleep', 'computer', 'laptop']);
-    _createImg('5.jpg', ['baby', 'yes', 'face']);
-    _createImg('6.jpg', ['hair', 'face']);
-    _createImg('7.jpg', ['baby', 'cute', 'face']);
-    _createImg('8.jpg', ['face']);
-    _createImg('9.jpg', ['face', 'kid']);
-    _createImg('10.jpg', ['smile', 'obama', 'celeb']);
+    _createImg('4.jpg', ['cute', 'cat', 'sleep', 'laptop']);
+    _createImg('5.jpg', ['baby', 'yes', 'winner']);
+    _createImg('6.jpg', ['hair', 'size', 'hands']);
+    _createImg('7.jpg', ['baby', 'cute']);
+    _createImg('8.jpg', ['smile', 'bowtie', 'hat']);
+    _createImg('9.jpg', ['asian', 'kid']);
+    _createImg('10.jpg', ['smile', 'obama', 'celeb', 'politics']);
     _createImg('11.jpg', ['boxing', 'kiss']);
-    _createImg('12.jpg', ['face', 'celeb', 'finger', 'gesture']);
+    _createImg('12.jpg', ['celeb', 'finger', 'gesture']);
     _createImg('13.jpg', ['celeb', 'smile', 'film', 'gatsby']);
     _createImg('14.jpg', ['celeb', 'film', 'matrix', 'face']);
     _createImg('15.jpg', ['film', 'face', 'gesture']);
     _createImg('16.jpg', ['face', 'smile']);
     _createImg('17.jpg', ['putin', 'finger']);
     _createImg('18.jpg', ['film', 'cartoon']);
-    _createImg('19.jpg', ['film', 'nature']);
+    _createImg('19.jpg', ['film', 'nature', 'woman', 'music']);
+    _createImg('20.jpg', ['eyes', 'funny', 'mouth']);
+    _createImg('21.jpg', ['kid', 'funny', 'dance']);
+    _createImg('22.jpg', ['trump', 'finger', 'face']);
+    _createImg('23.jpg', ['dog', 'funny', 'weird']);
+    _createImg('24.jpg', ['film', 'lazer', 'finger']);
+    _createImg('25.jpg', ['celeb', 'funny', 'shout']);
 }
 
 function _createImg(filename, keywords) {
@@ -97,8 +102,13 @@ function getGalleryImages(id) {
     }
     if (!gFilter) return gGallery;
     else {
-        var filteredImages = gGallery.filter(image => {
-            return image.keywords.includes(gFilter);
+        var filteredImages = [];
+        gGallery.map(meme => {
+            meme.keywords.map(keyword => {
+                if (keyword.includes(gFilter)) {
+                    filteredImages.push(meme);
+                }
+            })
         });
     }
     return filteredImages;
@@ -123,11 +133,11 @@ function getSavedMeme(id) {
     return gMemeGallery[idx].editorData;
 }
 
-function saveTitleSettings(textWidth) {
+function saveTitleSettings() {
     gMeme.titles.push(
         {
             text: gTitleSettings.text,
-            textWidth: textWidth,
+            textWidth: gTitleSettings.textWidth,
             x: gTitleSettings.x,
             y: gTitleSettings.y,
             stroke: gTitleSettings.stroke,
@@ -135,7 +145,7 @@ function saveTitleSettings(textWidth) {
             align: gTitleSettings.align,
             font: gTitleSettings.font,
             fontSize: gTitleSettings.fontSize,
-            titleArea: getTitleArea(gTitleSettings.x, gTitleSettings.y, textWidth, gTitleSettings.align, gTitleSettings.fontSize)
+            titleArea: getTitleArea(gTitleSettings.x, gTitleSettings.y, gTitleSettings.textWidth, gTitleSettings.align, gTitleSettings.fontSize)
         });
 }
 

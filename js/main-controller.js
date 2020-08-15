@@ -6,6 +6,7 @@ var isModalShown = false;
 var gGallerySection = document.querySelector('.gallery');
 var gEditorSection = document.querySelector('.editor');
 var gMemeGallerySection = document.querySelector('.meme-gallery');
+var gTimeout
 
 function onInit() {
     loadSettings();
@@ -18,6 +19,16 @@ function onInit() {
     initCanvas();
 }
 
+function showMessage(str, secsInterval) {
+    clearTimeout(gTimeout);
+    var toast = document.querySelector('.info-toast')
+    toast.innerText = str;
+    toast.classList.add('info-toast-show');
+    gTimeout = setTimeout(() => {
+        toast.classList.remove('info-toast-show');
+    }, secsInterval * 1000)
+
+}
 function onShowGallery() {
     if (isMenuOpen) onCloseMenu();
     gEditorSection.style.display = 'none';

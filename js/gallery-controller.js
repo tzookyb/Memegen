@@ -1,18 +1,19 @@
 'use strict'
 
 function galleryRender() {
-    const images = getGalleryImages();
+    var images = getGalleryImages().slice();
     var strHTML = '';
     if (!images.length) {
         strHTML = `<span style="grid-column: 1/-1; text-align: center">Sorry, No images that match that search...</span>`;
     } else {
-        images.forEach(image => {
+        while (images.length) {
+            const image = images.splice((getRandomInt(0, images.length - 1)), 1);
             strHTML += `
-        <div class="gallery-image"> 
-        <img src="${image.url}" onclick="onEditImage(${image.id})"/>
-        </div>
+            <div class="gallery-image"> 
+            <img src="${image[0].url}" onclick="onEditImage(${image[0].id})"/>
+            </div>
         `;
-        });
+        };
     }
     document.querySelector('.gallery-grid').innerHTML = strHTML;
 }
@@ -49,7 +50,8 @@ function searchWordsToHTML(words, idxs, maxWords) {
         let idx = getRandomInt(0, idxs.length);
         let word = words.splice(idx, 1);
         let count = idxs.splice(idx, 1);
-        let fontSize = 2.5 * count + 10;
+        let ratio = count / (Object.keys(gKeywords).length) * 60;
+        let fontSize = 12 + ratio;
         strHTML += `
         <span class="search-words" onclick="galleryWordSearch(this)" style="font-size: ${fontSize}px;"> ${word} </span>
         `;
@@ -63,7 +65,10 @@ function galleryShowMoreWords(el) {
 }
 
 function galleryWordSearch(el) {
-    let word = el.innerText;
+    let word = el.innerText.trim();
+    gKeywords[word]++;
+    saveSettings();
+    galleryRenderKeywords();
     document.querySelector('.search-bar').value = word.trim();
     onSearch(document.querySelector('.search-bar'));
 }

@@ -10,26 +10,14 @@
 </head>
 
 <body onload="onInit()">
-    <div class="menu-screen" onclick="onCloseMenu()"></div>
-    <div class="modal-screen" onclick="onHideDoneModal()">
-        <div class="done-modal">
-            <img class="close-done-modal" src="img/icons/x.png" onclick="onHideDoneModal()">
-            <h2>What would you like to do?</h2>
-            <div>
-                <img width=30 src="img/icons/facebook-logo.png">
-                <a href="#" onclick="onShareToFaceBook()">Share on Facebook</a>
-            </div>
-            <div>
-                <img width=30 src="img/icons/save.png">
-                <a href="#" onclick="onDownloadMeme(this)">Save to device</a>
-            </div>
-            <div>
-                <img width=30 src="img/favicon.png">
-                <a href="#" onclick="onSaveToMemes()">Save to Memes Gallery</a>
-                <span class="done-modal-info"></span>
-            </div>
-        </div>
-    </div>
+    <div style="font-family: 'Impact'"></div>
+    <div style="font-family: 'McLaren'"></div>
+    <div style="font-family: 'Lemon'"></div>
+    <div style="font-family: 'Comic Sans MS'"></div>
+    <div style="font-family: 'Arial Black'"></div>
+    <div class="menu-screen flex-center" onclick="onCloseMenu()"></div>
+    <div class="modal-screen flex-center" onclick="onHideDoneModal()"></div>
+
     <div class="page-container">
         <div class="about-modal">
             <div class="about-image">f</div>
@@ -40,7 +28,7 @@
             <div onclick="onInit()" class="logo">
                 <img src="img/logo.png">
             </div>
-            <nav>
+            <nav class="flex-center">
                 <ul>
                     <li><a onclick="onShowGallery()" href="#">Gallery</a></li>
                     <li><a onclick="onShowMemes()" href="#">Memes</a></li>
@@ -52,6 +40,24 @@
         </header>
         <!--Main-->
         <main>
+            <div class="done-modal">
+                <img class="close-done-modal" src="img/icons/x.png" onclick="onHideDoneModal()">
+                <h2>What would you like to do?</h2>
+                <div class="flex-center">
+                    <img width=30 src="img/favicon.png">
+                    <a href="#" onclick="onSaveToMemes()"> Save to Memes Gallery</a>
+                </div>
+                <div class="flex-center">
+                    <img width=30 src="img/icons/facebook-logo.png">
+                    <a href="#" onclick="onShareToFaceBook()"> Share on Facebook</a>
+                </div>
+                <div class="flex-center">
+                    <img width=30 src="img/icons/save.png">
+                    <a href="#" onclick="onDownloadMeme(this)"> Save to device</a>
+                </div>
+                <span class="done-modal-info"></span>
+            </div>
+            <span class="info-toast"></span>
             <!--Gallery section-->
             <section class="gallery">
                 <div class="search-box">
@@ -80,38 +86,39 @@
                     <canvas></canvas>
                 </div>
                 <div class="control-area">
-                    <div class="info"></div>
                     <input class="meme-title" type="text" oninput="onChangeTitleText(this)"
                         placeholder="Enter title text">
-                    <button class="control-btn arrows" onclick="onChangeSelectedTitle()"><img
+                    <button class="control-btn arrows" title="Change Selected Title" onclick="onSelectTitle()"><img
                             src="img/icons/updownarrows.png"></button>
-                    <button class="control-btn add" onclick="onAddTextTitle()"><img src="img/icons/add.png"></button>
-                    <button class="control-btn trash" onclick="onRemoveTextTitle()"><img
+                    <button class="control-btn add" title="Add new title" onclick="onAddTextTitle()"><img src="img/icons/add.png"></button>
+                    <button class="control-btn trash" title="Remove title" onclick="onRemoveTextTitle()"><img
                             src="img/icons/trash.png"></button>
-                    <button class="control-btn font-inc" onclick="onFontSizeChange(1)"><img
+                    <button class="control-btn font-inc" title="Increase font size" onclick="onFontSizeChange(1)"><img
                             src="img/icons/font-inc.png"></button>
                     <div class="control-btn font-size"><span>Font size: 40</span></div>
-                    <button class="control-btn font-dec" onclick="onFontSizeChange(-1)"><img
+                    <button class="control-btn font-dec" title="Decrease font size" onclick="onFontSizeChange(-1)"><img
                             src="img/icons/font-dec.png"></button>
-                    <button class="control-btn fill"><input type="color" class="fill"
+                    <button class="control-btn fill" title="Change fill color"><input type="color" class="fill"
                             onchange="onChangeFill(this)"></input><img src="img/icons/fill.png" /></button>
-                    <button class="control-btn stroke"><input type="color" class="fill"
+                    <button class="control-btn stroke" title="Change stroke color"><input type="color" class="fill"
                             onchange="onChangeStroke(this)"></input><img src="img/icons/stroke.png" /></button>
-                    <button class="control-btn align left" onclick="onChangeAlign('left',this)"><img
+                    <button class="control-btn align left" title="Align text left" onclick="onChangeAlign('left',this)"><img
                             src="img/icons/align-left.png"></button>
-                    <button class="control-btn align center" onclick="onChangeAlign('center',this)"><img
+                    <button class="control-btn align center" title="Align text center" onclick="onChangeAlign('center',this)"><img
                             src="img/icons/align-center.png"></button>
-                    <button class="control-btn align right" onclick="onChangeAlign('right',this)"><img
+                    <button class="control-btn align right" title="Align text right" onclick="onChangeAlign('right',this)"><img
                             src="img/icons/align-right.png"></button>
-                    <select onchange="onChangeFont(this)" class="font-picker">
-                        <option value="impact">Impact</option>
+                    <select onchange="onChangeFont(this)" title="Font option" class="font-picker">
+                        <option value="Impact">Impact</option>
+                        <option value="Mclaren">Mclaren</option>
+                        <option value="Lemon">Lemon</option>
                         <option value="Arial Black">Arial Black</option>
                         <option value="Comic Sans MS">Comic Sans</option>
-                        <option value="Tahoma">Tahoma</option>
                     </select>
                     <button class="control-btn done-btn" onclick="onShowDoneModal(true)">I'm Done <img
                             src="img/icons/facebook-logo.png" /> <img src="img/icons/save.png" />
                     </button>
+
                 </div>
             </section>
         </main>

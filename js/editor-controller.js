@@ -149,7 +149,9 @@ function onChangeTitleText(text) {
         return;
     }
     getCurrentSelectedTitle().text = text;
+    reCalcTitleSizeVars();
     renderMeme();
+    renderSelectRect(gMeme.selectedTitleIdx);
 }
 
 function getCurrentSelectedTitle() {

@@ -4,42 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload" as="font" href="fonts/Montserrat-Regular.ttf" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="fonts/SecularOne-Regular.ttf" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="fonts/ariblk.ttf" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="fonts/comicbd.ttf" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="fonts/impact.ttf" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="fonts/Lemon-Regular.ttf" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="fonts/McLaren-Regular.ttf" type="font/woff2" crossorigin="anonymous">
     <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <title>memegen</title>
 </head>
 
 <body onload="onInit()">
-    <div style="font-family: 'Impact'" hidden>.</div>
-    <div style="font-family: 'McLaren'" hidden>.</div>
-    <div style="font-family: 'Lemon'" hidden>.</div>
-    <div style="font-family: 'Comic Sans MS'" hidden>.</div>
-    <div style="font-family: 'Arial Black'"hidden>.</div>
-    
-    <div class="menu-screen flex-center" onclick="onCloseMenu()"></div>
-    <div class="modal-screen flex-center" onclick="onHideDoneModal()"></div>
-    <div class="about-screen flex-center" onclick="onHideAboutModal()"></div>
 
+    <!-- FADE SCREEN -->
+    <div class="screen" onclick="onHideModal(gCurrentShownModal)"></div>
+
+    <!-- WHOLE PAGE CONTAINER -->
     <div class="page-container">
-        <!--Header-->
+
+        <!--HEADER-->
         <header>
             <div onclick="onInit()" class="logo">
                 <img src="img/logo.png">
             </div>
             <nav class="flex-center">
                 <ul>
-                    <li><a onclick="onShowGallery()" href="#">Gallery</a></li>
-                    <li><a onclick="onShowMemes()" href="#">Memes</a></li>
-                    <li><a onclick="onShowAboutModal()" href="#">About</a></li>
+                    <li><a onclick="onRouteTo('.gallery')" href="#">Gallery</a></li>
+                    <li><a onclick="onRouteTo('.meme-gallery')" href="#">Memes</a></li>
+                    <li><a onclick="onShowModal('.about-modal')" href="#">About</a></li>
                 </ul>
-                <img src="img/icons/x.png" class="menu-close-btn" onclick="onCloseMenu()" />
-                <img src="img/icons/menu.png" class="menu-btn" onclick="onOpenMenu()" />
+                <img src="img/icons/x.png" class="menu-close-btn" onclick="onHideModal('nav')" />
+                <img src="img/icons/menu.png" class="menu-btn" onclick="onShowModal('nav')" />
             </nav>
         </header>
-        <!--Main-->
+
+        <!--MAIN-->
         <main>
+
+            <!-- INFO TOAST -->
+            <span class="info-toast"></span>
+
+            <!-- ABOUT SCREEN -->
             <div class="about-modal">
-                <img class="close-modal" src="img/icons/x.png" onclick="onHideAboutModal()"/>
+                <img class="close-modal" src="img/icons/x.png" onclick="onHideModal('.about-modal')" />
                 <h1>Hi!</h1>
                 <p>That's Me!</p>
                 <p>don't be shy, follow me:</p>
@@ -53,7 +62,7 @@
                     <img src="img/about.jpg" /></div>
             </div>
             <div class="done-modal">
-                <img class="close-modal" src="img/icons/x.png" onclick="onHideDoneModal()"/>
+                <img class="close-modal" src="img/icons/x.png" onclick="onHideModal('.done-modal')" />
                 <h2>What would you like to do?</h2>
                 <div class="flex-center">
                     <img width=30 src="img/favicon.png">
@@ -69,12 +78,12 @@
                 </div>
                 <span class="done-modal-info"></span>
             </div>
-            <span class="info-toast"></span>
-            <!--Gallery section-->
+
+            <!--GALLERY SECTION-->
             <section class="gallery">
                 <div class="search-box">
-                    <input class="search-bar" type="search" oninput="onSearch(this)"
-                        placeholder="Enter search keyword"><img src="img/icons/search-icon.png" /></input>
+                    <input class="search-bar" type="search" oninput="onSearch(this)" placeholder="Enter search keyword"
+                        autofocus><img src="img/icons/search-icon.png" /></input>
                 </div>
                 <span>Search suggestions:</span>
                 <div class="word-cloud">
@@ -86,49 +95,52 @@
                 </div>
 
             </section>
-            <!-- Meme Gallery Section -->
+
+            <!-- MEME GALLERY SECTION -->
             <section class="meme-gallery">
                 <h1>Meme Gallery</h1>
                 <div class="memes gallery-grid">
                 </div>
             </section>
-            <!--Editor Section-->
+
+            <!--EDITOR SECTION-->
             <section class="editor">
                 <div class="canvas-box">
                     <canvas></canvas>
                 </div>
                 <div class="control-area">
-                    <input class="meme-title" type="text" oninput="onChangeTitleText(this)"
-                        placeholder="Enter title text">
+                    <input class="meme-title" type="text" oninput="onChangeTitleText(this.value)"
+                        placeholder="type text and press Enter or +">
                     <button class="control-btn arrows" title="Change Selected Title" onclick="onSelectTitle()"><img
                             src="img/icons/updownarrows.png"></button>
                     <button class="control-btn add" title="Add new title" onclick="onAddTextTitle()"><img
                             src="img/icons/add.png"></button>
                     <button class="control-btn trash" title="Remove title" onclick="onRemoveTextTitle()"><img
                             src="img/icons/trash.png"></button>
-                    <button class="control-btn font-inc" title="Increase font size" onclick="onFontSizeChange(1)"><img
+                    <button class="control-btn font-inc" title="Increase font size" onclick="onFontSizeChangeBy(1)"><img
                             src="img/icons/font-inc.png"></button>
                     <div class="control-btn font-size"><span>Font size: 40</span></div>
-                    <button class="control-btn font-dec" title="Decrease font size" onclick="onFontSizeChange(-1)"><img
+                    <button class="control-btn font-dec" title="Decrease font size" onclick="onFontSizeChangeBy(-1)"><img
                             src="img/icons/font-dec.png"></button>
                     <button class="control-btn fill" title="Change fill color"><input type="color" class="fill"
-                            onchange="onChangeFill(this)"></input><img src="img/icons/fill.png" /></button>
-                    <button class="control-btn stroke" title="Change stroke color"><input type="color" class="fill"
-                            onchange="onChangeStroke(this)"></input><img src="img/icons/stroke.png" /></button>
+                            onchange="onChangeFill(this.value)"></input><img src="img/icons/fill.png" /></button>
+                    <button class="control-btn stroke" title="Change stroke color"><input type="color" value="#ffffff" class="fill"
+                            onchange="onChangeStroke(this.value)"></input><img src="img/icons/stroke.png" /></button>
                     <button class="control-btn align left" title="Align text left"
-                        onclick="onChangeAlign('left',this)"><img src="img/icons/align-left.png"></button>
+                        onclick="onChangeAlign('left')"><img src="img/icons/align-left.png"></button>
                     <button class="control-btn align center" title="Align text center"
-                        onclick="onChangeAlign('center',this)"><img src="img/icons/align-center.png"></button>
+                        onclick="onChangeAlign('center')"><img src="img/icons/align-center.png"></button>
                     <button class="control-btn align right" title="Align text right"
                         onclick="onChangeAlign('right',this)"><img src="img/icons/align-right.png"></button>
-                    <select onchange="onChangeFont(this)" title="Font option" class="font-picker">
+                    <select onchange="onChangeFont(this.value)" title="Font option" class="font-picker">
                         <option value="Impact">Impact</option>
+                        <option value="Secular One">עברית</option>
                         <option value="Mclaren">Mclaren</option>
                         <option value="Lemon">Lemon</option>
                         <option value="Arial Black">Arial Black</option>
                         <option value="Comic Sans MS">Comic Sans</option>
                     </select>
-                    <button class="control-btn done-btn" onclick="onShowDoneModal(true)">I'm Done <img
+                    <button class="control-btn done-btn" onclick="onShowModal('.done-modal')">I'm Done <img
                             src="img/icons/facebook-logo.png" /> <img src="img/icons/save.png" />
                     </button>
 
@@ -137,7 +149,7 @@
         </main>
 
 
-        <!--Footer-->
+        <!--FOOTER-->
         <footer>
             <img src="img/logo.png">
             Coffeerights 2020&copy Idan Benjamin

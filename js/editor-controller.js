@@ -3,22 +3,29 @@
 var gMeme = {};
 var gTitleSettings = {};
 var gIsTitleSelected = false;
+var gImg;
 
 function resetPrefs() {
     gIsTitleSelected = false;
     gMeme = null;
     gTitleSettings = {
+        text: '',
         x: 0,
         y: 50,
         font: 'Impact',
-        fontSize: 40,
+        fontSize: 28,
         stroke: '#000',
         fill: '#fff',
         align: 'center',
-        text: '',
     };
-    document.querySelector('.meme-title').value = '';
-    onChangeAlign(gTitleSettings.align);
+    onChangeAlign('center');
+}
+
+function editorInit(meme) {
+    resetPrefs();
+    gMeme = meme;
+    loadMemeToEditor();
+    onRouteTo('.editor');
 }
 
 function resizeCanvas(width, height) {
@@ -26,51 +33,65 @@ function resizeCanvas(width, height) {
     gCanvas.height = height;
 }
 
-function editorInit(meme) {
-    resetPrefs();
-    gMeme = meme;
-    renderMeme();
-    onShowEditor();
+function loadMemeToEditor() {
+    gImg = new Image()
+    gImg.onload = () => {
+        gCanvas.width = gImg.width;
+        gCanvas.height = gImg.height;
+        gCtx.drawImage(gImg, 0, 0, gImg.width, gImg.height);
+        gTitleSettings.x = gImg.width / 2;
+        gTitleSettings.fontSize = parseInt(gImg.width * 0.07);
+        onFontSizeChangeBy(0);
+        setTitleYLocation();
+        gMeme.initialWidth = gImg.width;
+        gMeme.initialHeight = gImg.height;
+
+        if (gMeme.titles.length) {
+            gMeme.titles.forEach((title) => {
+                renderTitle(title);
+            })
+        } else onAddTextTitle('type text and press Enter or +');
+    }
+    gImg.src = gMeme.url;
 }
 
-
-function renderMeme(isTitleChange) {
-    var img = new Image()
-    img.onload = () => {
-        resizeCanvas(img.width, img.height);
-        gCtx.drawImage(img, 0, 0, img.width, img.height);
-        gTitleSettings.x = img.width / 2;
-        gMeme.initialWidth = img.width;
-        gMeme.initialHeight = img.height;
+function renderMeme() {
+    gCtx.drawImage(gImg, 0, 0, gImg.width, gImg.height);
+    if (gMeme.titles.length) {
         gMeme.titles.forEach((title) => {
-            gTitleSettings = {
-                x: title.x,
-                y: title.y,
-                font: title.font,
-                fontSize: title.fontSize,
-                fill: title.fill,
-                stroke: title.stroke,
-                align: title.align,
-                text: title.text
-            };
-
-            onAddTextTitle(true, isTitleChange);
+            renderTitle(title);
         })
     }
-    img.src = gMeme.url;
 }
 
-function onAddTextTitle(isRerender = false, isChange = false) {
+function setTitleYLocation() {
+    const titleCount = gMeme.titles.length;
+    if (!titleCount) gTitleSettings.y = gTitleSettings.fontSize + 10;
+    else if (titleCount === 1) gTitleSettings.y = gCanvas.height - gTitleSettings.fontSize + 10;
+    else gTitleSettings.y = gCanvas.height / 2;
+}
+
+function renderTitle(title) {
+    gCtx.lineWidth = '2';
+    gCtx.font = title.fontSize + 'px ' + title.font;
+    gCtx.strokeStyle = title.stroke;
+    gCtx.fillStyle = title.fill;
+    gCtx.textAlign = title.align;
+    gCtx.fillText(title.text, title.x, title.y);
+    gCtx.strokeText(title.text, title.x, title.y);
+}
+
+function onAddTextTitle(text) {
+    if (text) gTitleSettings.text = text;
     if (!gTitleSettings.text) {
         showMessage('You have to insert some text to add title.', 2);
         return;
     }
-    if (!isRerender) {
-        setTitleYLocation();
-        gCtx.font = gTitleSettings.fontSize + 'px ' + gTitleSettings.font;
-        gTitleSettings.textWidth = gCtx.measureText(gTitleSettings.text).width;
-        saveTitleSettings();
-    }
+    setTitleYLocation();
+    gCtx.font = gTitleSettings.fontSize + 'px ' + gTitleSettings.font;
+    gTitleSettings.textWidth = gCtx.measureText(gTitleSettings.text).width;
+    saveTitleSettings();
+
     gCtx.lineWidth = '2';
     gCtx.font = gTitleSettings.fontSize + 'px ' + gTitleSettings.font;
     gCtx.strokeStyle = gTitleSettings.stroke;
@@ -79,21 +100,11 @@ function onAddTextTitle(isRerender = false, isChange = false) {
     gCtx.fillText(gTitleSettings.text, gTitleSettings.x, gTitleSettings.y);
     gCtx.strokeText(gTitleSettings.text, gTitleSettings.x, gTitleSettings.y);
 
-    if (!isChange) {
-        gIsTitleSelected = false;
-        document.querySelector('.meme-title').value = '';
-        gTitleSettings.text = '';
-    }
-}
-
-function setTitleYLocation() {
-    let titleCount = gMeme.titles.length;
-    if (!titleCount) gTitleSettings.y = gTitleSettings.fontSize + 10;
-    else if (titleCount === 1) gTitleSettings.y = gCanvas.height - gTitleSettings.fontSize + 10;
-    else gTitleSettings.y = gCanvas.height / 2;
+    setSelectedTitle(gMeme.titles.length - 1);
 }
 
 function onSelectTitle(idx) {
+    if (gIsTitleSelected) renderMeme();
     if (!gMeme.titles.length) {
         showMessage('There are no titles to select from.', 2);
         return;
@@ -109,21 +120,36 @@ function setSelectedTitle(idx) {
     if (idx === null) {
         gMeme.selectedTitleIdx = null;
         gIsTitleSelected = false;
-        document.querySelector('.meme-title').value = '';
+        document.querySelector('.meme-title').value = 'type text and press Enter or +';
     } else {
         gMeme.selectedTitleIdx = idx;
         gIsTitleSelected = true;
-        document.querySelector('.meme-title').value = gMeme.titles[gMeme.selectedTitleIdx].text;
+        document.querySelector('.meme-title').value = gMeme.titles[idx].text;
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
+    const input = document.querySelector('.meme-title');
+    input.focus();
+    input.select();
+}
+function renderSelectRect(idx) {
+    const title = gMeme.titles[idx];
+    gCtx.save();
+    gCtx.beginPath();
+    gCtx.lineWidth = '2';
+    gCtx.strokeStyle = '#fff';
+    gCtx.setLineDash([6]);
+    gCtx.rect(title.titleArea.x1 - 10, title.titleArea.y1, title.textWidth + 20, title.fontSize + 5);
+    gCtx.stroke();
+    gCtx.restore();
 }
 
-function onChangeTitleText(el) {
+function onChangeTitleText(text) {
     if (!gIsTitleSelected) {
-        gTitleSettings.text = el.value;
+        gTitleSettings.text = text;
         return;
     }
-    getCurrentSelectedTitle().text = el.value;
-    renderMeme(true);
+    getCurrentSelectedTitle().text = text;
+    renderMeme();
 }
 
 function getCurrentSelectedTitle() {
@@ -140,23 +166,26 @@ function onRemoveTextTitle() {
     setSelectedTitle(null);
 }
 
-function onFontSizeChange(value) {
+function onFontSizeChangeBy(value) {
     if (gIsTitleSelected) {
         getCurrentSelectedTitle().fontSize += value;
         reCalcTitleSizeVars();
-        renderMeme(true);
+        renderMeme();
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
     gTitleSettings.fontSize += value;
     gTitleSettings.y += value;
     document.querySelector('.font-size span').innerHTML = `Font size: ${gTitleSettings.fontSize}`;
 }
-function onChangeFont(el) {
+
+function onChangeFont(value) {
     if (gIsTitleSelected) {
-        getCurrentSelectedTitle().font = el.value;
+        getCurrentSelectedTitle().font = value;
         reCalcTitleSizeVars();
-        renderMeme(true);
+        renderMeme();
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
-    gTitleSettings.font = el.value;
+    gTitleSettings.font = value;
 }
 
 function reCalcTitleSizeVars() {
@@ -167,36 +196,40 @@ function reCalcTitleSizeVars() {
     title.titleArea = getTitleArea(title.x, title.y, title.textWidth, title.align, title.fontSize)
 }
 
-function onChangeStroke(el) {
+function onChangeStroke(value) {
     if (gIsTitleSelected) {
-        getCurrentSelectedTitle().stroke = el.value;
-        renderMeme(true);
+        getCurrentSelectedTitle().stroke = value;
+        renderMeme();
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
-    gTitleSettings.stroke = el.value;
+    gTitleSettings.stroke = value;
 }
-function onChangeFill(el) {
+
+function onChangeFill(value) {
     if (gIsTitleSelected) {
-        getCurrentSelectedTitle().fill = el.value;
-        renderMeme(true);
+        getCurrentSelectedTitle().fill = value;
+        renderMeme();
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
-    gTitleSettings.fill = el.value;
+    gTitleSettings.fill = value;
 }
 function onChangeAlign(align) {
     if (gIsTitleSelected) {
-        var title = getCurrentSelectedTitle();
+        const title = getCurrentSelectedTitle();
         title.align = align;
         if (align === 'left') title.x = 10;
         else if (align === 'right') title.x = gCanvas.width - 10;
         else if (align === 'center') title.x = gCanvas.width / 2;
         reCalcTitleSizeVars();
-        renderMeme(true);
+        renderMeme();
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
     gTitleSettings.align = align;
     if (align === 'left') gTitleSettings.x = 10;
     else if (align === 'right') gTitleSettings.x = gCanvas.width - 10;
     else if (align === 'center') gTitleSettings.x = gCanvas.width / 2;
 
-    let alignBtns = document.querySelectorAll('.align')
+    const alignBtns = document.querySelectorAll('.align')
     alignBtns.forEach((btn) => {
         if (btn.classList.contains(align)) btn.classList.add('active');
         else btn.classList.remove('active');
@@ -209,7 +242,9 @@ function onDownloadMeme(el) {
     const data = gCanvas.toDataURL();
     el.href = data;
     el.download = "memegen_meme.png";
+
     showDoneModalInfo('Download Meme Successful!')
+    setTimeout(() => { onHideModal(gCurrentShownModal) }, 2000)
 }
 function onShareToFaceBook() {
     var imgToShare = gCanvas.toDataURL("image/jpeg");
@@ -229,18 +264,19 @@ function onShareToFaceBook() {
         .catch(function (err) {
             console.error(err)
         })
+
     showDoneModalInfo('Sharing to Facebook Successful!');
+    setTimeout(() => { onHideModal(gCurrentShownModal) }, 2000)
 }
 function onSaveToMemes() {
     const imgData = gCanvas.toDataURL();
     var meme = { id: gSavedMemeId++, imgData, editorData: gMeme };
-    renderMeme(true);
+    renderMeme();
     addToMemeGallery(meme);
     memeGalleryRender();
     showDoneModalInfo('Added to Meme Gallery Successfuly! Redirecting...');
     setTimeout(() => {
-        onHideDoneModal();
-        onShowMemes();
+        onRouteTo('.meme-gallery');
     }, 3000);
 }
 function showDoneModalInfo(str) {

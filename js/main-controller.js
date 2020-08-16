@@ -3,10 +3,10 @@
 var gElBody = document.querySelector('body');
 var gIsMenuOpen = false;
 var gIsModalShown = false;
-var gGallerySection = document.querySelector('.gallery');
-var gEditorSection = document.querySelector('.editor');
-var gMemeGallerySection = document.querySelector('.meme-gallery');
-var gTimeout
+var gTimeout;
+var gCurrentShownModal;
+const gSections = ['.gallery', '.editor', '.meme-gallery']
+var gCurrentShownSection;
 
 function onInit() {
     loadSettings();
@@ -14,9 +14,46 @@ function onInit() {
     galleryRender();
     galleryRenderKeywords();
     memeGalleryRender();
-    onShowGallery();
     initEditor();
     initCanvas();
+    onRouteTo('.gallery');
+}
+
+function onShowModal(modal) {
+    if (gCurrentShownModal) { onHideModal(gCurrentShownModal) };
+    gElBody.classList.add('fade');
+    document.querySelector(modal).classList.add('show-modal');
+    gCurrentShownModal = modal;
+    if (modal === 'nav') {
+        document.querySelector('.menu-btn').style.display = 'none';
+        document.querySelector('.menu-close-btn').style.display = 'block';
+    }
+}
+
+function onHideModal(modal) {
+    gElBody.classList.remove('fade');
+    document.querySelector(modal).classList.remove('show-modal');
+    gCurrentShownModal = null;
+    if (modal === 'nav') {
+        document.querySelector('.menu-close-btn').style.display = '';
+        document.querySelector('.menu-btn').style.display = '';
+    }
+}
+
+function onRouteTo(page) {
+    if (gCurrentShownModal) { onHideModal(gCurrentShownModal) };
+    gSections.forEach(section => {
+        if (section === page) document.querySelector(section).classList.add('show-section');
+        else document.querySelector(section).classList.remove('show-section');
+    })
+    gCurrentShownSection = page;
+    if (page === '.editor') document.querySelector('.meme-title').focus();
+}
+
+function initEditor() {
+    document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
+        if (ev.keyCode === 13) onAddTextTitle();
+    });
 }
 
 function showMessage(str, secsInterval) {
@@ -27,69 +64,4 @@ function showMessage(str, secsInterval) {
     gTimeout = setTimeout(() => {
         toast.classList.remove('info-toast-show');
     }, secsInterval * 1000)
-
-}
-function onShowGallery() {
-    if (gIsMenuOpen) onCloseMenu();
-    gMemeGallerySection.classList.remove('show-section');
-    gEditorSection.classList.remove('show-section');
-    gGallerySection.classList.add('show-section');
-}
-function onShowMemes() {
-    if (gIsMenuOpen) onCloseMenu();
-    gGallerySection.classList.remove('show-section');
-    gEditorSection.classList.remove('show-section');
-    gMemeGallerySection.classList.add('show-section');
-}
-function onShowEditor() {
-    if (gIsMenuOpen) closeMenu();
-    gGallerySection.classList.remove('show-section');
-    gMemeGallerySection.classList.remove('show-section');
-    gEditorSection.classList.add('show-section');
-}
-
-function onOpenMenu() {
-    gElBody.classList.add('menu-open');
-    document.querySelector('.menu-btn').style.display = 'none';
-    document.querySelector('.menu-close-btn').style.display = 'block';
-    gIsMenuOpen = true;
-}
-function onCloseMenu() {
-    if (gIsModalShown) {
-        onHideDoneModal();
-        onHideAboutModal();
-    }
-    gElBody.classList.remove('menu-screen');
-    gElBody.classList.remove('menu-open');
-    document.querySelector('.menu-close-btn').style.display = '';
-    document.querySelector('.menu-btn').style.display = '';
-    gIsMenuOpen = false;
-}
-
-function onHideDoneModal() {
-    gElBody.classList.remove('modal-open');
-    document.querySelector('.done-modal').style.display = 'none';
-    gIsModalShown = false;
-}
-function onShowDoneModal() {
-    gElBody.classList.add('modal-open');
-    document.querySelector('.done-modal').style.display = 'flex';
-    gIsModalShown = true;
-}
-
-function initEditor() {
-    document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
-        if (ev.keyCode === 13) onAddTextTitle();
-    });
-}
-function onShowAboutModal() {
-    if (gIsMenuOpen) onCloseMenu();
-    gElBody.classList.add('about-open');
-    document.querySelector('.about-modal').style.display = 'block';
-    gIsModalShown = true;
-}
-function onHideAboutModal() {
-    gElBody.classList.remove('about-open');
-    document.querySelector('.about-modal').style.display = 'none';
-    gIsModalShown = false;
 }

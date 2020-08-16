@@ -8,13 +8,12 @@ var gTouchCoords;
 function initCanvas() {
     gCanvas.addEventListener("mousedown", mouseDown);
     gCanvas.addEventListener("mouseup", mouseUp);
+    gElBody.addEventListener("mouseup", mouseUp);
     gCanvas.addEventListener("mousemove", drag);
     gCanvas.addEventListener("touchstart", mouseDown);
     gCanvas.addEventListener("touchmove", drag);
     gCanvas.addEventListener("touchend", mouseUp);
 }
-
-
 
 function mouseDown(ev) {
     gIsMouseDown = true;
@@ -64,8 +63,9 @@ function drag(ev) {
         title.x += xDiff;
         title.y += yDiff;
         title.titleArea = getTitleArea(title.x, title.y, title.textWidth, title.align, title.fontSize);
+        renderMeme();
+        renderSelectRect(gMeme.selectedTitleIdx);
     }
-    renderMeme(true);
 }
 
 function checkTitleClicked(x, y) {

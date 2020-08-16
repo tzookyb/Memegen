@@ -137,8 +137,6 @@ function getSavedMeme(id) {
 function saveTitleSettings() {
     gMeme.titles.push(
         {
-            text: gTitleSettings.text,
-            textWidth: gTitleSettings.textWidth,
             x: gTitleSettings.x,
             y: gTitleSettings.y,
             stroke: gTitleSettings.stroke,
@@ -146,6 +144,8 @@ function saveTitleSettings() {
             align: gTitleSettings.align,
             font: gTitleSettings.font,
             fontSize: gTitleSettings.fontSize,
+            text: gTitleSettings.text,
+            textWidth: gTitleSettings.textWidth,
             titleArea: getTitleArea(gTitleSettings.x, gTitleSettings.y, gTitleSettings.textWidth, gTitleSettings.align, gTitleSettings.fontSize)
         });
 }

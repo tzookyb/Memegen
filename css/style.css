@@ -20,6 +20,13 @@
 }
 
 @font-face {
+    font-family: 'Secular One';
+    src: url(../fonts/SecularOne-Regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
     font-family: 'Lemon';
     src: url(../fonts/Lemon-Regular.ttf);
     font-weight: normal;
@@ -149,21 +156,38 @@ ul {
     background-color: #ff7f00;
 }
 
+nav.show-modal ul {
+    transform: translateY(60px);
+    margin: 0
+}
+
+li {
+    padding: 20px;
+}
+
+.done-modal.modal-show {
+    visibility: visible;
+    opacity: 1;
+}
+
 .done-modal {
-    display: none;
+    visibility: hidden;
     position: fixed;
     top: 120px;
-    z-index: 2;
+    z-index: -1;
     width: 100%;
     max-width: 500px;
     padding: 20px;
     height: 50vh;
     border-radius: 20px;
     background-color: #ff7f00;
+    display: flex;
     flex-direction: column;
     justify-content: space-around;
     text-align: center;
     color: #fff;
+    opacity: 0;
+    transition: 0.7s;
 }
 
 .close-modal {
@@ -189,7 +213,7 @@ ul {
 .done-modal a {
     color: #fff;
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: bold;
 }
 
@@ -203,16 +227,8 @@ li a {
     text-decoration: none;
 }
 
-body.menu-open li {
-    padding: 20px;
-}
-
-body.menu-open ul {
-    transform: translateY(60px);
-    margin: 0
-}
-
-.menu-screen, .modal-screen, .about-screen {
+.screen {
+    visibility: hidden;
     position: fixed;
     top: 0;
     left: 0;
@@ -222,11 +238,10 @@ body.menu-open ul {
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.5s;
-    visibility: hidden;
     z-index: 1;
 }
 
-body.menu-open .menu-screen, body.modal-open .modal-screen, body.about-open .about-screen {
+body.fade .screen {
     opacity: 1;
     visibility: visible;
 }
@@ -272,9 +287,10 @@ main {
 /* ABOUT */
 
 .about-modal {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
     position: fixed;
-    z-index: 3;
+    z-index: -1;
     width: 350px;
     top: 70px;
     height: 550px;
@@ -283,6 +299,7 @@ main {
     text-align: center;
     color: #fff;
     overflow: hidden;
+    transition: 1s;
 }
 
 .social {
@@ -337,6 +354,7 @@ main {
 /* GALLERY */
 
 .gallery {
+    visibility: hidden;
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -400,14 +418,30 @@ main {
     padding: 20px;
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: minmax(50px, 185px) repeat(auto-fill, minmax(50px, 185px));
-    align-items: center;
+    grid-template-columns: minmax(calc(50vw - 50px), 185px) repeat(auto-fill, minmax(calc(50vw - 50px), 185px));
+    justify-content: center;
+}
+
+.gallery-image::before {
+    content: "";
+    padding-top: 100%;
+    display: block;
+    grid-area: 1/1/2/2;
 }
 
 .gallery-image {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+.gallery-image img:not(.bin) {
+    grid-area: 1/1/2/2;
+    cursor: pointer;
     width: 100%;
     height: 100%;
-    position: relative;
+    object-fit: cover;
 }
 
 .gallery-image img:hover {
@@ -415,20 +449,19 @@ main {
     transition: box-shadow 0.3s;
 }
 
-.gallery-image img:not(.bin) {
-    height: 100%;
-    width: 100%;
-    cursor: pointer;
-}
-
 .bin {
     display: none;
     background-color: #ff7f00;
     transform: translate3d(0, 0, 0);
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.bin:hover {
+    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both infinite;
 }
 
 .gallery-image:hover .bin {
-    animation: shake 0.82s cubic-bezier(.36, .07, .19, .97) both;
     display: block;
     position: absolute;
     cursor: pointer;
@@ -464,6 +497,7 @@ main {
 
 canvas {
     max-height: 45vh;
+    max-height: 100%;
     max-width: 100%;
 }
 
@@ -508,19 +542,32 @@ canvas {
     grid-column: span 5;
 }
 
-.arrows {
-    grid-row: 2;
-    grid-column: 2;
+.meme-title:focus {
+    animation: blink 0.5s ease-out 1s 6 alternate-reverse;
 }
 
-.add {
+.size-range {
+    grid-row: 2;
+    grid-column: span 2;
+}
+
+.size-range::-webkit-slider-thumb {
+    color: #ff7f00;
+}
+
+.arrows {
     grid-row: 2;
     grid-column: 3;
 }
 
-.trash {
+.add {
     grid-row: 2;
     grid-column: 4;
+}
+
+.trash {
+    grid-row: 2;
+    grid-column: 5;
 }
 
 .font-inc {
@@ -602,9 +649,24 @@ footer img {
 
 /* MEDIA QUERIES */
 
+@media (max-width: 300px) {
+    .gallery-grid {
+        padding: 5px;
+        grid-gap: 5px;
+        grid-template-columns: repeat(auto-fill, minmax(50px, calc(50vw - 10px)));
+        grid-template-rows: repeat(auto-fill, minmax(50px, calc(50vw - 10px)));
+    }
+    .search-box input {
+        font-size: 0.6rem;
+    }
+}
+
 @media (min-width: 490px) {
     html {
         font-size: 18px;
+    }
+    .about-modal {
+        top: 120px;
     }
     .search-box {
         max-width: 400px
@@ -616,12 +678,8 @@ footer img {
         display: none;
     }
     main {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 0 10px;
         margin-top: 80px;
-    }
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
     }
     ul {
         transform: translateY(0);
@@ -630,26 +688,31 @@ footer img {
         font-size: 1rem;
     }
     li {
-        padding-left: 20px;
-        padding-right: 20px;
+        padding: 0 20px;
     }
 }
 
 @media (min-width: 555px) {
     main {
-        margin-top: 105px;
+        margin-top: 90px;
     }
     .logo {
         max-width: 250px;
     }
     ul {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 630px) {
+    .gallery-grid {
+        grid-template-columns: minmax(170px, 300px) repeat(auto-fill, minmax(170px, 300px));
     }
 }
 
 @media (min-width: 780px) {
-    .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    ul {
+        font-size: 1.5rem;
     }
     .logo {
         max-width: 300px;
@@ -662,8 +725,8 @@ footer img {
         max-width: 100%;
     }
     main {
-        padding-right: 35px;
-        padding-left: 35px;
+        margin-top: 113px;
+        padding: 0 35px;
     }
     .editor {
         flex-direction: row;
@@ -686,9 +749,6 @@ footer img {
     }
 }
 
-/* backface-visibility: hidden;
-  perspective: 1000px; */
-
 @keyframes shake {
     10%, 90% {
         transform: translate3d(-1px, 0, 0);
@@ -704,7 +764,23 @@ footer img {
     }
 }
 
+@keyframes blink {
+    from {
+        background-color: yellow;
+    }
+    to {
+        background-color: ''
+    }
+}
+
 .show-section {
     transform: translate3d(0, 0, 0);
     position: relative;
+    visibility: visible;
+}
+
+.show-modal {
+    opacity: 1;
+    visibility: visible;
+    z-index: 2;
 }

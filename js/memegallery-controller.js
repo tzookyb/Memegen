@@ -11,7 +11,7 @@ function memeGalleryRender() {
         memes.forEach(meme => {
             strHTML += `
             <div class="gallery-image">
-            <img class="bin" width=30 src="img/icons/trash.png" onclick="onDeleteMeme(${meme.id})"/>    
+            <img class="bin" width=30 src="img/icons/trash.png" onclick="onRemoveMeme(${meme.id})"/>    
             <img src="${meme.imgData}" onclick="onEditMeme(${meme.id})"/>
             </div>
             `;
@@ -24,7 +24,8 @@ function onEditMeme(id) {
     const meme = getSavedMeme(id);
     editorInit(meme);
 }
-function onDeleteMeme(id) {
-    deleteMeme(id);
+
+function onRemoveMeme(id) {
+    removeMeme(id);
     memeGalleryRender();
 }

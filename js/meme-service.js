@@ -118,6 +118,7 @@ function getGalleryImages(id) {
 function getSavedMemeIdx(id) {
     return gMemeGallery.findIndex(meme => meme.id === id);
 }
+
 function getImgIdxById(id) {
     return gGallery.findIndex(img => img.id === id);
 }
@@ -169,7 +170,7 @@ function getTitleArea(x1, y1, width, align, fontSize) {
     return { x1: x, y1: y, x2: (x + width), y2: y + fontSize }
 }
 
-function deleteMeme(id) {
+function removeMeme(id) {
     let idx = getSavedMemeIdx(id);
     gMemeGallery.splice(idx, 1);
     saveSettings();

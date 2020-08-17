@@ -120,7 +120,11 @@ function setSelectedTitle(idx) {
     if (idx === null) {
         gMeme.selectedTitleIdx = null;
         gIsTitleSelected = false;
-        document.querySelector('.meme-title').value = 'type text and press Enter or +';
+        gTitleSettings.text = '';
+        const input = document.querySelector('.meme-title');
+        input.value = '';
+        input.focus();
+
     } else {
         gMeme.selectedTitleIdx = idx;
         gIsTitleSelected = true;
@@ -144,8 +148,8 @@ function renderSelectRect(idx) {
 }
 
 function onChangeTitleText(text) {
+    gTitleSettings.text = text;
     if (!gIsTitleSelected) {
-        gTitleSettings.text = text;
         return;
     }
     getCurrentSelectedTitle().text = text;
@@ -283,5 +287,5 @@ function onSaveToMemes() {
 }
 function showDoneModalInfo(str) {
     document.querySelector('.done-modal-info').innerText = str;
-    setTimeout(() => { document.querySelector('.done-modal-info').innerText = '' }, 5000);
+    setTimeout(() => { document.querySelector('.done-modal-info').innerText = '' }, 4000);
 }

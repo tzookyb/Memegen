@@ -50,7 +50,7 @@ function searchWordsToHTML(words, idxs, maxWords) {
         let idx = getRandomInt(0, idxs.length);
         let word = words.splice(idx, 1);
         let count = idxs.splice(idx, 1);
-        let ratio = count / (Object.keys(gKeywords).length) * 60;
+        let ratio = count / (Object.keys(gKeywords).length) * 70;
         let fontSize = 12 + ratio;
         strHTML += `
         <span class="search-words" onclick="galleryWordSearch(this)" style="font-size: ${fontSize}px;"> ${word} </span>

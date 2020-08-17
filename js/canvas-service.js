@@ -5,16 +5,6 @@ var gIsMouseDown = false;
 var gIsTitleSelected = false;
 var gTouchCoords;
 
-function initCanvas() {
-    gCanvas.addEventListener("mousedown", mouseDown);
-    gCanvas.addEventListener("mouseup", mouseUp);
-    gElBody.addEventListener("mouseup", mouseUp);
-    gCanvas.addEventListener("mousemove", drag);
-    gCanvas.addEventListener("touchstart", mouseDown);
-    gCanvas.addEventListener("touchmove", drag);
-    gCanvas.addEventListener("touchend", mouseUp);
-}
-
 function mouseDown(ev) {
     gIsMouseDown = true;
 

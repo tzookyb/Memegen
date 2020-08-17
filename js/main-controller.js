@@ -15,8 +15,7 @@ function onInit() {
     galleryRender();
     galleryRenderKeywords();
     memeGalleryRender();
-    initEditor();
-    initCanvas();
+    initEvents();
 }
 
 function onShowModal(modal) {
@@ -50,12 +49,6 @@ function onRouteTo(page) {
     if (page === '.editor') document.querySelector('.meme-title').focus();
 }
 
-function initEditor() {
-    document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
-        if (ev.keyCode === 13) onAddTextTitle();
-    });
-}
-
 function showMessage(str, secsInterval) {
     clearTimeout(gTimeout);
     var toast = document.querySelector('.info-toast')
@@ -64,4 +57,20 @@ function showMessage(str, secsInterval) {
     gTimeout = setTimeout(() => {
         toast.classList.remove('info-toast-show');
     }, secsInterval * 1000)
+}
+
+function initEvents() {
+    gCanvas.addEventListener("mousedown", mouseDown);
+    gCanvas.addEventListener("mouseup", mouseUp);
+    gElBody.addEventListener("mouseup", mouseUp);
+    gCanvas.addEventListener("mousemove", drag);
+    gCanvas.addEventListener("touchstart", mouseDown);
+    gCanvas.addEventListener("touchmove", drag);
+    gCanvas.addEventListener("touchend", mouseUp);
+    
+    document.querySelector('.meme-title').addEventListener('keyup', function (ev) {
+        if (ev.keyCode === 13) {
+            onAddTextTitle();
+        }
+    });
 }

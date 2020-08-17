@@ -8,6 +8,7 @@ var gCurrentShownModal;
 const gSections = ['.gallery', '.editor', '.meme-gallery']
 var gCurrentShownSection;
 
+
 function onInit() {
     loadSettings();
     resetPrefs();
@@ -16,7 +17,6 @@ function onInit() {
     memeGalleryRender();
     initEditor();
     initCanvas();
-    onRouteTo('.gallery');
 }
 
 function onShowModal(modal) {

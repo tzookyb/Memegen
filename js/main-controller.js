@@ -1,6 +1,6 @@
 'use strict'
 
-var gElBody = document.querySelector('body');
+var gElBody = document.body;
 var gIsMenuOpen = false;
 var gIsModalShown = false;
 var gTimeout;
@@ -10,7 +10,7 @@ var gCurrentShownSection;
 
 
 function onInit() {
-    loadSettings();
+    loadData();
     resetPrefs();
     galleryRender();
     galleryRenderKeywords();

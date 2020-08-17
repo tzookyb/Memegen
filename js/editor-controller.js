@@ -28,11 +28,6 @@ function editorInit(meme) {
     onRouteTo('.editor');
 }
 
-function resizeCanvas(width, height) {
-    gCanvas.width = width;
-    gCanvas.height = height;
-}
-
 function loadMemeToEditor() {
     gImg = new Image()
     gImg.onload = () => {
@@ -117,21 +112,19 @@ function onSelectTitle(idx) {
 }
 
 function setSelectedTitle(idx) {
+    const input = document.querySelector('.meme-title');
+
     if (idx === null) {
         gMeme.selectedTitleIdx = null;
         gIsTitleSelected = false;
         gTitleSettings.text = '';
-        const input = document.querySelector('.meme-title');
         input.value = '';
-        input.focus();
-
     } else {
         gMeme.selectedTitleIdx = idx;
         gIsTitleSelected = true;
         document.querySelector('.meme-title').value = gMeme.titles[idx].text;
         renderSelectRect(gMeme.selectedTitleIdx);
     }
-    const input = document.querySelector('.meme-title');
     input.focus();
     input.select();
 }
@@ -153,7 +146,7 @@ function onChangeTitleText(text) {
         return;
     }
     getCurrentSelectedTitle().text = text;
-    reCalcTitleSizeVars();
+    reCalcTitleArea();
     renderMeme();
     renderSelectRect(gMeme.selectedTitleIdx);
 }
@@ -175,7 +168,7 @@ function onRemoveTextTitle() {
 function onFontSizeChangeBy(value) {
     if (gIsTitleSelected) {
         getCurrentSelectedTitle().fontSize += value;
-        reCalcTitleSizeVars();
+        reCalcTitleArea();
         renderMeme();
         renderSelectRect(gMeme.selectedTitleIdx);
     }
@@ -187,14 +180,14 @@ function onFontSizeChangeBy(value) {
 function onChangeFont(value) {
     if (gIsTitleSelected) {
         getCurrentSelectedTitle().font = value;
-        reCalcTitleSizeVars();
+        reCalcTitleArea();
         renderMeme();
         renderSelectRect(gMeme.selectedTitleIdx);
     }
     gTitleSettings.font = value;
 }
 
-function reCalcTitleSizeVars() {
+function reCalcTitleArea() {
     var title = getCurrentSelectedTitle();
 
     gCtx.font = title.fontSize + 'px ' + title.font;
@@ -226,7 +219,7 @@ function onChangeAlign(align) {
         if (align === 'left') title.x = 10;
         else if (align === 'right') title.x = gCanvas.width - 10;
         else if (align === 'center') title.x = gCanvas.width / 2;
-        reCalcTitleSizeVars();
+        reCalcTitleArea();
         renderMeme();
         renderSelectRect(gMeme.selectedTitleIdx);
     }
@@ -245,6 +238,7 @@ function onChangeAlign(align) {
 
 // DONE-MODAL FUNCTIONALITY //
 function onDownloadMeme(el) {
+    renderMeme();
     const data = gCanvas.toDataURL();
     el.href = data;
     el.download = "memegen_meme.png";
@@ -253,6 +247,7 @@ function onDownloadMeme(el) {
     setTimeout(() => { onHideModal(gCurrentShownModal) }, 2000)
 }
 function onShareToFaceBook() {
+    renderMeme();
     var imgToShare = gCanvas.toDataURL("image/jpeg");
     var formData = new FormData();
     formData.append('img', imgToShare);
@@ -275,9 +270,9 @@ function onShareToFaceBook() {
     setTimeout(() => { onHideModal(gCurrentShownModal) }, 2000)
 }
 function onSaveToMemes() {
+    renderMeme();
     const imgData = gCanvas.toDataURL();
     var meme = { id: gSavedMemeId++, imgData, editorData: gMeme };
-    renderMeme();
     addToMemeGallery(meme);
     memeGalleryRender();
     showDoneModalInfo('Added to Meme Gallery Successfuly! Redirecting...');

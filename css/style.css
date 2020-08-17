@@ -409,6 +409,10 @@ main {
     text-align: center;
 }
 
+.word-cloud span:nth-child(even):not(.more-words) {
+    color: #4e62a3;
+}
+
 .more-words {
     display: none;
 }

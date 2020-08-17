@@ -53,14 +53,16 @@
                 <p>That's Me!</p>
                 <p>don't be shy, follow me:</p>
                 <div class="social flex-center">
-                    <a href="https://github.com/tzookyb"><img class="github" width=60px
+                    <a href="https://github.com/tzookyb" target="_blank"><img class="github" width=60px
                             src="img/icons/github-logo.png"></a>
-                    <a href="https://www.linkedin.com/in/idanbenjamin"><img class="linkedin" width=60px
+                    <a href="https://www.linkedin.com/in/idanbenjamin" target="_blank"><img class="linkedin" width=60px
                             src="img/icons/linkedin-logo.png"></a>
                 </div>
                 <div class="about-image">
                     <img src="img/about.jpg" /></div>
             </div>
+
+            <!-- DONE MODAL -->
             <div class="done-modal">
                 <img class="close-modal" src="img/icons/x.png" onclick="onHideModal('.done-modal')" />
                 <h2>What would you like to do?</h2>
@@ -120,14 +122,15 @@
                     <button class="control-btn font-inc" title="Increase font size" onclick="onFontSizeChangeBy(1)"><img
                             src="img/icons/font-inc.png"></button>
                     <div class="control-btn font-size"><span>Font size: 40</span></div>
-                    <button class="control-btn font-dec" title="Decrease font size" onclick="onFontSizeChangeBy(-1)"><img
-                            src="img/icons/font-dec.png"></button>
+                    <button class="control-btn font-dec" title="Decrease font size"
+                        onclick="onFontSizeChangeBy(-1)"><img src="img/icons/font-dec.png"></button>
                     <button class="control-btn fill" title="Change fill color"><input type="color" class="fill"
                             onchange="onChangeFill(this.value)"></input><img src="img/icons/fill.png" /></button>
-                    <button class="control-btn stroke" title="Change stroke color"><input type="color" value="#ffffff" class="fill"
-                            onchange="onChangeStroke(this.value)"></input><img src="img/icons/stroke.png" /></button>
-                    <button class="control-btn align left" title="Align text left"
-                        onclick="onChangeAlign('left')"><img src="img/icons/align-left.png"></button>
+                    <button class="control-btn stroke" title="Change stroke color"><input type="color" value="#ffffff"
+                            class="fill" onchange="onChangeStroke(this.value)"></input><img
+                            src="img/icons/stroke.png" /></button>
+                    <button class="control-btn align left" title="Align text left" onclick="onChangeAlign('left')"><img
+                            src="img/icons/align-left.png"></button>
                     <button class="control-btn align center" title="Align text center"
                         onclick="onChangeAlign('center')"><img src="img/icons/align-center.png"></button>
                     <button class="control-btn align right" title="Align text right"

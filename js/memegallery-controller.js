@@ -1,7 +1,7 @@
 'use strict'
 
 function memeGalleryRender() {
-    const memes = gMemeGallery;
+    const memes = getSavedMemes();
     var memeGalleryHTML = document.querySelector('.memes');
 
     var strHTML = '';

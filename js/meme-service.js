@@ -6,27 +6,27 @@ var gMemeGallery;
 var gKeywords;
 var gFilter;
 
-function loadSettings() {
-    var settings = loadFromStorage('MemegenData');
-    if (!settings) setDefaults();
+function loadData() {
+    var appData = loadFromStorage('MemegenData');
+    if (!appData) setDefaults();
     else {
-        gId = settings.gId;
-        gSavedMemeId = settings.gSavedMemeId;
-        gGallery = settings.gGallery;
-        gMemeGallery = settings.gMemeGallery;
-        gKeywords = settings.gKeywords;
+        gId = appData.gId;
+        gSavedMemeId = appData.gSavedMemeId;
+        gGallery = appData.gGallery;
+        gMemeGallery = appData.gMemeGallery;
+        gKeywords = appData.gKeywords;
     }
 }
 
-function saveSettings() {
-    var settings = {
-        gid: gId,
-        gSavedMemeId: gSavedMemeId,
-        gGallery: gGallery,
-        gMemeGallery: gMemeGallery,
-        gKeywords: gKeywords
+function saveData() {
+    var appData = {
+        gId,
+        gSavedMemeId,
+        gGallery,
+        gMemeGallery,
+        gKeywords
     }
-    saveToStorage('MemegenData', settings);
+    saveToStorage('MemegenData', appData);
 }
 
 function setDefaults() {
@@ -36,7 +36,7 @@ function setDefaults() {
     gMemeGallery = [];
     _createDefaultImgs();
     getKeywords();
-    saveSettings();
+    saveData();
 }
 
 function getKeywords() {
@@ -103,36 +103,18 @@ function getGalleryImages(id) {
     }
     if (!gFilter) return gGallery;
     else {
-        var filteredImages = [];
-        gGallery.map(meme => {
-            meme.keywords.map(keyword => {
-                if (keyword.includes(gFilter)) {
-                    filteredImages.push(meme);
-                }
-            })
-        });
+        var filteredImages = gGallery.filter(meme => {
+            if (meme.keywords.some(keyword => {
+                return (keyword.includes(gFilter));
+            })) return meme;
+        })
     }
-    return filteredImages;
-}
 
-function getSavedMemeIdx(id) {
-    return gMemeGallery.findIndex(meme => meme.id === id);
+    return filteredImages;
 }
 
 function getImgIdxById(id) {
     return gGallery.findIndex(img => img.id === id);
-}
-
-function addToMemeGallery(data) {
-    gMemeGallery.push(data);
-    saveSettings();
-}
-
-function getSavedMeme(id) {
-    let idx = gMemeGallery.findIndex(meme => {
-        return meme.id === id;
-    });
-    return gMemeGallery[idx].editorData;
 }
 
 function saveTitleSettings() {
@@ -173,5 +155,24 @@ function getTitleArea(x1, y1, width, align, fontSize) {
 function removeMeme(id) {
     let idx = getSavedMemeIdx(id);
     gMemeGallery.splice(idx, 1);
-    saveSettings();
+    saveData();
+}
+
+function addToMemeGallery(data) {
+    gMemeGallery.push(data);
+    saveData();
+}
+
+function getSavedMemes(id) {
+    if (id) {
+        let idx = gMemeGallery.findIndex(meme => {
+            return meme.id === id;
+        });
+        return gMemeGallery[idx].editorData;
+    }
+    else return gMemeGallery;
+}
+
+function getSavedMemeIdx(id) {
+    return gMemeGallery.findIndex(meme => meme.id === id);
 }
